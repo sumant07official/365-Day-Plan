@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>365 Day Discipline System</title>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#e8621c">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Discipline">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -885,6 +891,10 @@ renderDashboard();renderToday();renderHistory();renderCalendar();
 const todayStr=`${BASE_YEAR}-${String(BASE_MON+1).padStart(2,'0')}-${String(TODAY_DAY+1).padStart(2,'0')}`;
 document.getElementById('nc-start').value=todayStr;
 document.getElementById('nc-end').value=`${BASE_YEAR}-04-30`;
+
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('/sw.js').then(()=>console.log('SW registered'));
+}
 </script>
 </body>
 </html>
