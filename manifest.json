@@ -2,12 +2,12 @@
   "name": "365 Day Discipline System",
   "short_name": "Discipline",
   "description": "Track your daily habits and don't break the chain.",
-  "start_url": "/",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#0f0f0f",
   "theme_color": "#e8621c",
   "orientation": "portrait",
-  "scope": "/",
+  "scope": "./",
   "icons": [
     {
       "src": "icons/icon-192.png",
