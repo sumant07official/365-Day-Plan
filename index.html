@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>365 Day Discipline System</title>
-<link rel="manifest" href="./manifest.json">
+<link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#e8621c">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -304,7 +304,8 @@ input[type="date"].inp::-webkit-calendar-picker-indicator{filter:invert(.4)}
 </div>
 
 <script>
-const TODAY_DAY=26, BASE_YEAR=2026, BASE_MON=2;
+const _now=new Date();
+const TODAY_DAY=_now.getDate()-1, BASE_YEAR=_now.getFullYear(), BASE_MON=_now.getMonth();
 const TODAYKEY=mkKey(BASE_YEAR,BASE_MON,TODAY_DAY+1);
 
 function daysInMonth(y,m){return new Date(y,m+1,0).getDate()}
@@ -314,17 +315,17 @@ function keyToDate(k){const[y,m,d]=k.split('-').map(Number);return new Date(y,m-
 function fmtDate(dt,opts){return dt.toLocaleDateString('en-IN',opts||{month:'short',day:'numeric'})}
 function addDays(dt,n){const d=new Date(dt);d.setDate(d.getDate()+n);return d}
 
-let S={
+const DEFAULT_STATE={
   playlists:[
-    {id:'pl_morning',name:'Morning',icon:'☀',habits:[
+    {id:'pl_morning',name:'Morning',icon:'\u2600',habits:[
       {id:'h1',name:'Wake up 5am',color:'#FAC775'},
       {id:'h2',name:'Cold shower',color:'#B5D4F4'},
     ]},
-    {id:'pl_grind',name:'Grind',icon:'⚡',habits:[
+    {id:'pl_grind',name:'Grind',icon:'\u26a1',habits:[
       {id:'h3',name:'DSA practice',color:'#EF9F27'},
       {id:'h4',name:'Deep study 2hr',color:'#F5C4B3'},
     ]},
-    {id:'pl_body',name:'Body',icon:'💪',habits:[
+    {id:'pl_body',name:'Body',icon:'\ud83d\udcaa',habits:[
       {id:'h5',name:'Workout',color:'#D85A30'},
       {id:'h6',name:'No junk food',color:'#9FE1CB'},
     ]}
@@ -332,6 +333,9 @@ let S={
   challenges:[],
   days:{}
 };
+function loadState(){try{const r=localStorage.getItem('discipline365');if(r)return JSON.parse(r);}catch(e){}return JSON.parse(JSON.stringify(DEFAULT_STATE));}
+function saveState(){try{localStorage.setItem('discipline365',JSON.stringify(S));}catch(e){}}
+let S=loadState();
 
 function getAllHabits(){return S.playlists.flatMap(p=>p.habits)}
 
@@ -345,15 +349,18 @@ function habitsForKey(k){
 }
 
 function recalcStreaks(){
-  const total=daysInMonth(BASE_YEAR,BASE_MON);
+  // Sort all stored day keys and recalc streak across entire history
+  const keys=Object.keys(S.days).sort();
   let streak=0;
-  for(let d=1;d<=total;d++){
-    const k=mkKey(BASE_YEAR,BASE_MON,d);
-    if(!S.days[k]) break;
+  for(let i=0;i<keys.length;i++){
+    const k=keys[i];
     const habs=habitsForKey(k);
     const score=habs.filter(h=>S.days[k].done[h.id]).length;
-    if(score===habs.length&&habs.length>0) streak++;
-    else streak=0;
+    if(score===habs.length&&habs.length>0){
+      // Check for gap from previous day
+      if(i>0){const prev=keys[i-1];const diff=(keyToDate(k)-keyToDate(prev))/864e5;if(diff>1) streak=0;}
+      streak++;
+    } else streak=0;
     S.days[k].streak=streak;
   }
 }
@@ -376,23 +383,7 @@ function ensureDay(k){
   habitsForKey(k).forEach(h=>{if(S.days[k].done[h.id]===undefined) S.days[k].done[h.id]=false;});
 }
 
-// Init demo data
-(function(){
-  const all=getAllHabits();
-  for(let d=1;d<=TODAY_DAY+1;d++){
-    const k=mkKey(BASE_YEAR,BASE_MON,d);
-    const r=Math.random();
-    S.days[k]={done:{},streak:0};
-    all.forEach(h=>{S.days[k].done[h.id]=r>0.2?Math.random()>0.18:Math.random()>0.55;});
-  }
-  const chal={id:'chal_run',name:'Morning run',icon:'🏃',color:'#9b6ef3',start:'2026-03-20',end:'2026-04-10',playlistId:''};
-  S.challenges.push(chal);
-  for(let d=20;d<=TODAY_DAY+1;d++){
-    const k=mkKey(BASE_YEAR,BASE_MON,d);
-    if(S.days[k]) S.days[k].done[chal.id]=Math.random()>0.25;
-  }
-  recalcStreaks();
-})();
+recalcStreaks();
 
 // NAVIGATION
 function showView(name,el){
@@ -426,7 +417,10 @@ const renders={dashboard:renderDashboard,today:renderToday,history:renderHistory
 
 // DASHBOARD
 function renderDashboard(){
+  const today=new Date(BASE_YEAR,BASE_MON,TODAY_DAY+1);
+  const monthPrefix=`${BASE_YEAR}-${String(BASE_MON+1).padStart(2,'0')}-`;
   let perf=0,monthScore=0,bestStreak=0;
+  // Loop only days in current month up to today
   for(let d=1;d<=TODAY_DAY+1;d++){
     const k=mkKey(BASE_YEAR,BASE_MON,d);
     if(!S.days[k]) continue;
@@ -435,42 +429,51 @@ function renderDashboard(){
     if(score===max&&max>0) perf++;
     if(S.days[k].streak>bestStreak) bestStreak=S.days[k].streak;
   }
+  // Also check best streak across all stored days
+  Object.values(S.days).forEach(d=>{if(d.streak>bestStreak) bestStreak=d.streak;});
   const curStreak=S.days[TODAYKEY]?.streak||0;
-  document.getElementById('dash-datesub').textContent=new Date(BASE_YEAR,BASE_MON,TODAY_DAY+1).toLocaleDateString('en-IN',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+  document.getElementById('dash-datesub').textContent=today.toLocaleDateString('en-IN',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
   document.getElementById('dash-streakbadge').textContent=`🔥 ${curStreak} day streak`;
   document.getElementById('dash-metrics').innerHTML=`
     <div class="metric-tile"><div class="m-lbl">Current streak</div><div class="m-val" style="color:var(--orange)">${curStreak}</div><div class="m-sub">days</div></div>
-    <div class="metric-tile"><div class="m-lbl">Monthly score</div><div class="m-val">${monthScore}</div><div class="m-sub">pts so far</div></div>
+    <div class="metric-tile"><div class="m-lbl">Monthly score</div><div class="m-val">${monthScore}</div><div class="m-sub">pts this month</div></div>
     <div class="metric-tile"><div class="m-lbl">Best streak</div><div class="m-val">${bestStreak}</div><div class="m-sub">days</div></div>
     <div class="metric-tile"><div class="m-lbl">Perfect days</div><div class="m-val">${perf}</div><div class="m-sub">this month</div></div>
   `;
-  const today=new Date(BASE_YEAR,BASE_MON,TODAY_DAY+1);
   const active=S.challenges.filter(c=>new Date(c.start)<=today&&new Date(c.end)>=today);
   document.getElementById('dash-challenges').innerHTML=active.length?active.map(c=>miniChalCard(c)).join(''):
     `<div style="font-size:12px;color:var(--muted)">No active challenges. <button class="btn btn-sm btn-ghost" onclick="showView('manage')">Add one →</button></div>`;
+  // Habit perf bars — use all stored days
   const allH=getAllHabits();
+  const allKeys=Object.keys(S.days).sort();
   const colors=['#EF9F27','#5DCAA5','#378ADD','#D85A30','#639922','#E8621C','#9b6ef3','#E04580'];
-  document.getElementById('dash-perf').innerHTML=allH.map((h,i)=>{
-    let cnt=0,tot=0;
-    for(let d=1;d<=TODAY_DAY+1;d++){const k=mkKey(BASE_YEAR,BASE_MON,d);if(S.days[k]){tot++;if(S.days[k].done[h.id])cnt++;}}
+  document.getElementById('dash-perf').innerHTML=allH.length?allH.map((h,i)=>{
+    let cnt=0,tot=allKeys.length;
+    allKeys.forEach(k=>{if(S.days[k]?.done[h.id]) cnt++;});
     const pct=tot?Math.round(cnt/tot*100):0;
     return `<div style="display:flex;align-items:center;gap:8px;margin-bottom:7px">
       <div style="font-size:12px;color:var(--muted);width:120px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${h.name}</div>
       <div style="flex:1;height:6px;background:var(--surface3);border-radius:99px;overflow:hidden"><div style="height:100%;border-radius:99px;background:${colors[i%colors.length]};width:${pct}%"></div></div>
       <div style="font-size:11px;color:var(--muted);width:30px;text-align:right;font-family:var(--mono)">${pct}%</div>
     </div>`;
-  }).join('');
+  }).join(''):`<div style="font-size:12px;color:var(--muted)">No habits tracked yet.</div>`;
+  // Last 7 days table — dynamic
   const tbody=document.getElementById('dash-wtbody');tbody.innerHTML='';
-  for(let d=Math.max(1,TODAY_DAY-4);d<=TODAY_DAY+1;d++){
-    const k=mkKey(BASE_YEAR,BASE_MON,d);if(!S.days[k]) continue;
-    const {score,max}=getScore(k);const st=getStatus(score,max);const isT=d===TODAY_DAY+1;
+  const last7=[];
+  for(let i=6;i>=0;i--){
+    const dt=addDays(today,-i);
+    last7.push({k:dateToKey(dt),dt,isT:i===0});
+  }
+  last7.forEach(({k,dt,isT})=>{
+    if(!S.days[k]) return;
+    const {score,max}=getScore(k);const st=getStatus(score,max);
     const tr=document.createElement('tr');
-    tr.innerHTML=`<td>${fmtDate(new Date(BASE_YEAR,BASE_MON,d))}${isT?' <span class="badge bo">Today</span>':''}</td>
+    tr.innerHTML=`<td>${fmtDate(dt)}${isT?' <span class="badge bo">Today</span>':''}</td>
       <td style="font-family:var(--mono)">${score}/${max}</td><td><span class="badge ${st.cls}">${st.label}</span></td>
       <td style="color:var(--orange);font-family:var(--mono)">${S.days[k].streak>0?'🔥'+S.days[k].streak:'—'}</td>
-      <td><button class="btn btn-sm" onclick="quickEdit(${d})">Edit</button></td>`;
+      <td><button class="btn btn-sm" onclick="quickEditDate('${k}')">Edit</button></td>`;
     tbody.appendChild(tr);
-  }
+  });
 }
 
 function miniChalCard(c){
@@ -534,7 +537,7 @@ function toggleTodayHabit(hId){
     el.className='h-check'+(S.days[TODAYKEY].done[hId]?' on':'');
     el.textContent=S.days[TODAYKEY].done[hId]?'✓':'';
   });
-  recalcStreaks();updateTodayStats();
+  recalcStreaks();saveState();updateTodayStats();
 }
 
 function updateTodayStats(){
@@ -553,7 +556,7 @@ function updateTodayStats(){
 function markAllToday(v){
   ensureDay(TODAYKEY);
   habitsForKey(TODAYKEY).forEach(h=>{S.days[TODAYKEY].done[h.id]=v;});
-  recalcStreaks();renderToday();
+  recalcStreaks();saveState();renderToday();
 }
 
 // HISTORY
@@ -632,8 +635,7 @@ function toggleEditHabit(k,hId){
   document.querySelectorAll(`[id^="ehc-${k}-${hId}"]`).forEach(el=>{
     el.className='h-check'+(S.days[k].done[hId]?' on':'');el.textContent=S.days[k].done[hId]?'✓':'';
   });
-  recalcStreaks();
-  const {score,max}=getScore(k);const st=getStatus(score,max);
+  recalcStreaks();saveState();
   const badge=document.getElementById('ep-badge');
   if(badge){badge.className='badge '+st.cls;badge.textContent=st.label;}
   S.playlists.forEach(pl=>{
@@ -646,12 +648,18 @@ function toggleEditHabit(k,hId){
 
 function editMarkAll(k,v){
   habitsForKey(k).forEach(h=>{S.days[k].done[h.id]=v;});
-  recalcStreaks();
-  const parts=k.split('-');openHistEdit(Number(parts[0]),Number(parts[1])-1,Number(parts[2]),k);
+  recalcStreaks();saveState();
+  const dt=keyToDate(k);
+  openHistEdit(dt.getFullYear(),dt.getMonth(),dt.getDate(),k);
   renderHistory();
 }
 function closeHistEdit(){histSel=null;document.getElementById('hist-editwrap').innerHTML='';renderHistory();}
 function quickEdit(d){showView('history',document.querySelector('.nav-item[onclick*="history"]'));setTimeout(()=>openHistEdit(BASE_YEAR,BASE_MON,d,mkKey(BASE_YEAR,BASE_MON,d)),60);}
+function quickEditDate(k){
+  const dt=keyToDate(k);
+  showView('history',document.querySelector('.nav-item[onclick*="history"]'));
+  setTimeout(()=>openHistEdit(dt.getFullYear(),dt.getMonth(),dt.getDate(),k),60);
+}
 
 // CALENDAR
 function renderCalendar(){
@@ -733,12 +741,12 @@ function addPlaylist(){
   if(!name) return;
   S.playlists.push({id:'pl_'+Date.now(),name,icon,habits:[]});
   document.getElementById('new-pl-name').value='';document.getElementById('new-pl-icon').value='';
-  renderSidebarPlaylists();renderManage();
+  saveState();renderSidebarPlaylists();renderManage();
 }
 function deletePlaylist(plId){
   if(!confirm('Delete playlist?')) return;
   S.playlists=S.playlists.filter(p=>p.id!==plId);
-  renderSidebarPlaylists();renderManage();
+  saveState();renderSidebarPlaylists();renderManage();
 }
 function addHabit(plId){
   const nameEl=document.getElementById('nh-name-'+plId);
@@ -747,11 +755,11 @@ function addHabit(plId){
   const h={id:'h_'+Date.now(),name,color:colorEl.value};
   S.playlists.find(p=>p.id===plId)?.habits.push(h);
   Object.keys(S.days).forEach(k=>{if(!S.days[k].done[h.id]) S.days[k].done[h.id]=false;});
-  nameEl.value='';renderSidebarPlaylists();renderManage();
+  nameEl.value='';saveState();renderSidebarPlaylists();renderManage();
 }
 function deleteHabit(plId,hId){
   const pl=S.playlists.find(p=>p.id===plId);if(pl) pl.habits=pl.habits.filter(h=>h.id!==hId);
-  recalcStreaks();renderManage();
+  recalcStreaks();saveState();renderManage();
 }
 function addChallenge(){
   const name=document.getElementById('nc-name').value.trim();
@@ -766,13 +774,13 @@ function addChallenge(){
   S.challenges.push(c);
   if(plId){const pl=S.playlists.find(p=>p.id===plId);if(pl) pl.habits.push({id:c.id,name:c.name,color:c.color});}
   document.getElementById('nc-name').value='';document.getElementById('nc-icon').value='';
-  renderSidebarChallenges();renderManage();
+  saveState();renderSidebarChallenges();renderManage();
 }
 function deleteChallenge(cId){
   if(!confirm('Delete challenge?')) return;
   S.challenges=S.challenges.filter(c=>c.id!==cId);
   S.playlists.forEach(pl=>{pl.habits=pl.habits.filter(h=>h.id!==cId);});
-  renderSidebarChallenges();renderManage();
+  saveState();renderSidebarChallenges();renderManage();
 }
 
 // PLAYLIST DETAIL
@@ -794,8 +802,9 @@ function renderPlaylistDetail(plId,container){
     </div>
     <div class="card"><div class="card-title">All-time performance</div>
       ${pl.habits.map(h=>{
-        let cnt=0,tot=0;
-        for(let d=1;d<=TODAY_DAY+1;d++){const k=mkKey(BASE_YEAR,BASE_MON,d);if(S.days[k]){tot++;if(S.days[k].done[h.id])cnt++;}}
+        const allKeys=Object.keys(S.days);
+        const tot=allKeys.length;
+        const cnt=allKeys.filter(k=>S.days[k]?.done[h.id]).length;
         const pct=tot?Math.round(cnt/tot*100):0;
         return `<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
           <div style="font-size:12px;color:var(--muted);width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex-shrink:0">${h.name}</div>
@@ -864,7 +873,7 @@ function renderChallengeDetail(cId,container){
 function toggleChalDay(cId,k){
   if(!S.days[k]) S.days[k]={done:{},streak:0};
   S.days[k].done[cId]=!S.days[k].done[cId];
-  recalcStreaks();
+  recalcStreaks();saveState();
   renderChallengeDetail(cId,document.getElementById('vchal-'+cId));
 }
 
@@ -886,14 +895,25 @@ function renderSidebarChallenges(){
 }
 
 // BOOT
+// Day of year counter for sidebar chip
+(function(){
+  const start=new Date(_now.getFullYear(),0,0);
+  const diff=_now-start;
+  const oneDay=1000*60*60*24;
+  const dayOfYear=Math.floor(diff/oneDay);
+  document.getElementById('sb-daychip').textContent=`Day ${dayOfYear} / 365`;
+})();
+
 renderSidebarPlaylists();renderSidebarChallenges();
 renderDashboard();renderToday();renderHistory();renderCalendar();
 const todayStr=`${BASE_YEAR}-${String(BASE_MON+1).padStart(2,'0')}-${String(TODAY_DAY+1).padStart(2,'0')}`;
 document.getElementById('nc-start').value=todayStr;
-document.getElementById('nc-end').value=`${BASE_YEAR}-04-30`;
+// Default end date: last day of current month
+const lastDay=new Date(BASE_YEAR,BASE_MON+1,0);
+document.getElementById('nc-end').value=`${BASE_YEAR}-${String(BASE_MON+1).padStart(2,'0')}-${String(lastDay.getDate()).padStart(2,'0')}`;
 
 if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('/sw.js').then(()=>console.log('SW registered'));
+  navigator.serviceWorker.register('./sw.js').then(()=>console.log('SW registered'));
 }
 </script>
 </body>
