@@ -2,7 +2,7 @@
   "name": "365 Day Discipline System",
   "short_name": "Discipline",
   "id": "/365-Day-Plan/",
-  "description": "Track your daily habits and don't break the chain.",
+  "description": "Track your daily habits and don't break the chain. Build streaks, manage playlists, and complete 365-day challenges.",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#0f0f0f",
@@ -29,10 +29,18 @@
   ],
   "screenshots": [
     {
-      "src": "screenshots/screen1.png",
+      "src": "screenshots/screen-wide.png",
       "sizes": "1280x720",
       "type": "image/png",
-      "form_factor": "wide"
+      "form_factor": "wide",
+      "label": "Dashboard view"
+    },
+    {
+      "src": "screenshots/screen-narrow.png",
+      "sizes": "720x1280",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Today's habits"
     }
   ]
 }
