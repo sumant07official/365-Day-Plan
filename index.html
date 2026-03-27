@@ -2,918 +2,1210 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>365 Day Discipline System</title>
-<link rel="manifest" href="./manifest.json">
-<meta name="theme-color" content="#e8621c">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0d0d14">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Discipline">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="manifest" href="./manifest.json">
+<title>365 Discipline</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:#0f0f0f;--surface:#1a1a1a;--surface2:#222;--surface3:#2a2a2a;
-  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
-  --text:#f0ede8;--muted:#888;--muted2:#444;
-  --orange:#e8621c;--orange-d:rgba(232,98,28,0.15);
-  --green:#2bb57e;--green-d:rgba(43,181,126,0.15);
-  --red:#e04545;--red-d:rgba(224,69,69,0.12);
-  --amber:#e0a020;--amber-d:rgba(224,160,32,0.12);
-  --blue:#3a8ae8;--blue-d:rgba(58,138,232,0.12);
-  --purple:#9b6ef3;--purple-d:rgba(155,110,243,0.12);
-  --font:'DM Sans',sans-serif;--mono:'DM Mono',monospace;
+  --bg:       #0d0d14;
+  --bg2:      #12121c;
+  --surface:  #1a1a2e;
+  --surface2: #22223a;
+  --surface3: #2a2a45;
+  --border:   rgba(139,92,246,0.15);
+  --border2:  rgba(139,92,246,0.28);
+  --text:     #f0eeff;
+  --muted:    #8878aa;
+  --muted2:   #443d66;
+  --purple:   #8b5cf6;
+  --purple2:  #a78bfa;
+  --purple3:  #c4b5fd;
+  --pink:     #ec4899;
+  --cyan:     #06b6d4;
+  --green:    #10b981;
+  --amber:    #f59e0b;
+  --red:      #ef4444;
+  --font:     'Space Grotesk', sans-serif;
+  --mono:     'JetBrains Mono', monospace;
+  --radius:   14px;
+  --nb-h:     68px;
 }
-*{box-sizing:border-box;margin:0;padding:0}
-html{background:var(--bg);color:var(--text);font-family:var(--font)}
-body{min-height:100vh;overflow-x:hidden}
-::-webkit-scrollbar{width:4px}
-::-webkit-scrollbar-thumb{background:var(--surface3);border-radius:99px}
-.app{display:grid;grid-template-columns:228px 1fr;min-height:100vh}
-.sidebar{background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
-.sb-logo{padding:20px 18px 16px;border-bottom:1px solid var(--border)}
-.sb-logo-title{font-size:13px;font-weight:600;letter-spacing:.04em}
-.sb-logo-sub{font-size:11px;color:var(--muted);margin-top:2px;font-style:italic}
-.sb-sec{font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted2);padding:14px 18px 4px}
-.nav-item{display:flex;align-items:center;gap:9px;padding:8px 18px;font-size:13px;color:var(--muted);cursor:pointer;border-left:2px solid transparent;transition:all .13s}
-.nav-item:hover{background:var(--surface2);color:var(--text)}
-.nav-item.active{background:var(--surface2);color:var(--text);border-left-color:var(--orange)}
-.nav-icon{font-size:13px;width:16px;text-align:center;flex-shrink:0}
-.nav-badge{margin-left:auto;font-size:10px;background:var(--surface3);padding:2px 6px;border-radius:99px;color:var(--muted);font-family:var(--mono)}
-.nav-badge.live{color:var(--purple);background:var(--purple-d)}
-.sb-footer{margin-top:auto;padding:14px 18px;border-top:1px solid var(--border)}
-.sb-day{font-size:11px;font-family:var(--mono);color:var(--orange);background:var(--orange-d);padding:4px 10px;border-radius:6px;display:inline-block}
-.main{padding:28px 32px;overflow-y:auto}
-.page-header{margin-bottom:24px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.page-title{font-size:21px;font-weight:600}
-.page-sub{font-size:12px;color:var(--muted);margin-top:3px}
-.view{display:none}.view.active{display:block}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin-bottom:12px}
-.card-title{font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
-.g4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:12px}
-.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-.metric-tile{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
-.m-lbl{font-size:11px;color:var(--muted);font-weight:500;margin-bottom:5px}
-.m-val{font-size:24px;font-weight:600;font-family:var(--mono);line-height:1}
-.m-sub{font-size:11px;color:var(--muted);margin-top:3px}
-.badge{display:inline-block;font-size:11px;font-weight:500;padding:2px 8px;border-radius:5px}
-.bg{background:var(--green-d);color:var(--green)}.ba{background:var(--amber-d);color:var(--amber)}
-.br{background:var(--red-d);color:var(--red)}.bo{background:var(--orange-d);color:var(--orange)}
-.bb{background:var(--blue-d);color:var(--blue)}.bp{background:var(--purple-d);color:var(--purple)}
-.btn{font-family:var(--font);font-size:12px;font-weight:500;padding:7px 14px;border-radius:8px;border:1px solid var(--border2);background:transparent;color:var(--text);cursor:pointer;transition:all .12s}
-.btn:hover{background:var(--surface2)}
-.btn-primary{background:var(--orange)!important;color:white!important;border-color:var(--orange)!important}
-.btn-primary:hover{opacity:.88!important}
-.btn-danger{color:var(--red)!important}
-.btn-danger:hover{background:var(--red-d)!important;border-color:transparent!important}
-.btn-purple{background:var(--purple)!important;color:white!important;border-color:var(--purple)!important}
-.btn-purple:hover{opacity:.88!important}
-.btn-sm{font-size:11px;padding:4px 10px}
-.btn-ghost{border-color:transparent;color:var(--muted)}
-.btn-ghost:hover{background:var(--surface2);color:var(--text);border-color:transparent}
-.inp{font-family:var(--font);font-size:12px;background:var(--surface2);border:1px solid var(--border2);border-radius:7px;padding:7px 10px;color:var(--text);outline:none;transition:border .13s}
-.inp:focus{border-color:var(--orange)}
-input[type="date"].inp::-webkit-calendar-picker-indicator{filter:invert(.4)}
-.prog{height:5px;background:var(--surface3);border-radius:99px;overflow:hidden}
-.prog-fill{height:100%;border-radius:99px;transition:width .3s}
-.h-check{width:22px;height:22px;border-radius:6px;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .15s;font-size:12px;color:white}
-.h-check.on{background:var(--green);border-color:var(--green)}
-.habit-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)}
-.habit-row:last-child{border-bottom:none}
-.h-icon{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
-.h-name{flex:1;font-size:13px}
-.h-tag{font-size:10px;padding:1px 6px;border-radius:4px;background:var(--purple-d);color:var(--purple);margin-left:4px}
-.hist-row{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;cursor:pointer;transition:background .12s;border:1px solid transparent}
-.hist-row:hover{background:var(--surface2)}
-.hist-row.selected{background:var(--surface2);border-color:var(--border2)}
-.hist-dn{font-size:12px;font-weight:500;width:26px;color:var(--muted);font-family:var(--mono)}
-.hist-date{font-size:11px;color:var(--muted);width:92px;flex-shrink:0}
-.hist-dots{display:flex;gap:3px;flex:1;flex-wrap:wrap}
-.dot{width:8px;height:8px;border-radius:50%}
-.hist-score{font-size:12px;font-weight:500;font-family:var(--mono);width:32px;text-align:right}
-.hist-streak{font-size:11px;color:var(--orange);width:38px;text-align:right;font-family:var(--mono)}
-.edit-panel{background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:16px;margin-top:6px;margin-bottom:8px}
-.ep-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px}
-.ep-title{font-size:13px;font-weight:500}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
-.cal-hdr-cell{font-size:10px;color:var(--muted);text-align:center;padding:2px 0;font-weight:500}
-.cal-day{aspect-ratio:1;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;cursor:pointer;border:1px solid transparent;transition:all .1s;font-family:var(--mono)}
-.cal-day:hover{border-color:var(--border2)}
-.cal-day.cp{background:var(--green-d);color:var(--green)}.cal-day.ca{background:var(--amber-d);color:var(--amber)}
-.cal-day.cm{background:var(--red-d);color:var(--red)}.cal-day.ce{background:var(--surface2);color:var(--muted2);cursor:default}
-.cal-day.ct{border-color:var(--orange)!important}
-.pl-tabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px}
-.pl-tab{font-size:12px;font-weight:500;padding:5px 12px;border-radius:7px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .13s;display:flex;align-items:center;gap:5px}
-.pl-tab:hover{background:var(--surface2);color:var(--text)}
-.pl-tab.active{background:var(--orange-d);border-color:var(--orange);color:var(--orange)}
-.pl-tab .plc{font-size:10px;background:rgba(255,255,255,0.07);padding:1px 5px;border-radius:4px;font-family:var(--mono)}
-.pl-view{display:none}.pl-view.active{display:block}
-.sec-card{border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:10px}
-.sec-hdr{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--surface2);cursor:pointer;user-select:none;transition:background .12s}
-.sec-hdr:hover{background:var(--surface3)}
-.sec-name{font-size:13px;font-weight:500;flex:1}
-.sec-meta{font-size:11px;color:var(--muted);font-family:var(--mono)}
-.sec-chev{font-size:11px;color:var(--muted);transition:transform .2s}
-.sec-card.collapsed .sec-chev{transform:rotate(-90deg)}
-.sec-body{padding:10px 14px;border-top:1px solid var(--border)}
-.sec-card.collapsed .sec-body{display:none}
-.challenge-card{border:1px solid var(--purple-d);border-radius:12px;padding:16px 18px;background:rgba(155,110,243,0.04);margin-bottom:12px;position:relative;overflow:hidden}
-.challenge-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--purple)}
-.chal-title{font-size:14px;font-weight:600;margin-bottom:2px}
-.chal-sub{font-size:11px;color:var(--muted);margin-bottom:12px}
-.chal-days{display:flex;gap:3px;flex-wrap:wrap;margin-top:10px}
-.chal-dot{width:14px;height:14px;border-radius:3px;flex-shrink:0;cursor:pointer;transition:opacity .12s}
-.chal-dot:hover{opacity:.75}
-.chal-dot.done{background:var(--purple)}.chal-dot.missed{background:var(--red-d)}.chal-dot.pending{background:var(--surface3)}
-.chal-dot.today{outline:2px solid var(--orange);outline-offset:1px}
-.form-row{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;margin-bottom:10px}
-.form-group{display:flex;flex-direction:column;gap:4px}
-.form-lbl{font-size:11px;color:var(--muted);font-weight:500}
-.wtbl{width:100%;border-collapse:collapse;font-size:12px}
-.wtbl th{text-align:left;padding:6px 10px;color:var(--muted);font-weight:500;font-size:11px;border-bottom:1px solid var(--border)}
-.wtbl td{padding:8px 10px;border-bottom:1px solid var(--border)}
-.wtbl tr:last-child td{border-bottom:none}
-.wtbl tr:hover td{background:var(--surface2)}
-@media(max-width:680px){
-  .app{grid-template-columns:1fr}
-  .sidebar{position:static;height:auto;flex-direction:row;flex-wrap:nowrap;overflow-x:auto;padding:8px}
-  .sb-logo,.sb-sec,.sb-footer{display:none}
-  .nav-item{padding:6px 12px;border-left:none;border-bottom:2px solid transparent;white-space:nowrap}
-  .nav-item.active{border-bottom-color:var(--orange);border-left-color:transparent}
-  .main{padding:14px}.g4{grid-template-columns:repeat(2,1fr)}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; background: var(--bg); color: var(--text); font-family: var(--font); overflow: hidden; }
+
+/* ── LAYOUT ── */
+#app { display: flex; flex-direction: column; height: 100dvh; height: 100vh; }
+#content { flex: 1; overflow-y: auto; overflow-x: hidden; padding-bottom: calc(var(--nb-h) + 12px); scroll-behavior: smooth; }
+#content::-webkit-scrollbar { display: none; }
+
+/* ── PAGES ── */
+.page { display: none; padding: 20px 16px 0; animation: fadeUp .25s ease; }
+.page.active { display: block; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+/* ── NAVBAR ── */
+#navbar {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  height: var(--nb-h);
+  background: rgba(13,13,20,0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-around;
+  padding: 0 4px;
+  z-index: 100;
+  padding-bottom: env(safe-area-inset-bottom);
 }
+.nb-btn {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 4px; padding: 8px 4px; cursor: pointer; border: none; background: none;
+  color: var(--muted); transition: color .2s; position: relative;
+}
+.nb-btn.active { color: var(--purple2); }
+.nb-btn.active .nb-dot { opacity: 1; }
+.nb-icon { font-size: 22px; line-height: 1; transition: transform .2s; }
+.nb-btn.active .nb-icon { transform: scale(1.1); }
+.nb-label { font-size: 10px; font-weight: 500; letter-spacing: .03em; }
+.nb-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--purple); position: absolute; top: 6px; opacity: 0; transition: opacity .2s; }
+
+/* ── TOP BAR ── */
+.topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.topbar-title { font-size: 22px; font-weight: 700; letter-spacing: -.02em; }
+.topbar-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.chip { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 99px; font-family: var(--mono); }
+.chip-purple { background: rgba(139,92,246,.18); color: var(--purple2); border: 1px solid var(--border2); }
+.chip-green  { background: rgba(16,185,129,.15); color: var(--green); }
+.chip-amber  { background: rgba(245,158,11,.15); color: var(--amber); }
+.chip-red    { background: rgba(239,68,68,.15); color: var(--red); }
+.chip-pink   { background: rgba(236,72,153,.15); color: var(--pink); }
+.chip-cyan   { background: rgba(6,182,212,.15); color: var(--cyan); }
+
+/* ── CARDS ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 12px;
+}
+.card-glow { box-shadow: 0 0 28px rgba(139,92,246,.08); }
+.card-title { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
+
+/* ── STAT TILES ── */
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+.stat-tile {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  position: relative; overflow: hidden;
+}
+.stat-tile::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--c1), var(--c2));
+}
+.stat-label { font-size: 10px; color: var(--muted); font-weight: 500; letter-spacing: .05em; text-transform: uppercase; margin-bottom: 6px; }
+.stat-val { font-size: 28px; font-weight: 700; font-family: var(--mono); line-height: 1; }
+.stat-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+/* ── PROGRESS BAR ── */
+.prog-wrap { height: 6px; background: var(--surface3); border-radius: 99px; overflow: hidden; }
+.prog-fill { height: 100%; border-radius: 99px; transition: width .4s cubic-bezier(.4,0,.2,1); }
+
+/* ── HABIT ROW ── */
+.habit-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 0; border-bottom: 1px solid var(--border);
+  cursor: pointer; transition: opacity .15s;
+}
+.habit-row:last-child { border-bottom: none; padding-bottom: 0; }
+.habit-row:active { opacity: .7; }
+.h-icon { width: 32px; height: 32px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+.h-info { flex: 1; min-width: 0; }
+.h-name { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.h-pl { font-size: 11px; color: var(--muted); margin-top: 1px; }
+.h-check {
+  width: 26px; height: 26px; border-radius: 8px;
+  border: 2px solid var(--border2);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: all .2s; font-size: 13px; color: white;
+}
+.h-check.on { background: var(--green); border-color: var(--green); }
+
+/* ── SECTION HEADER ── */
+.sec-hdr { display: flex; align-items: center; justify-content: space-between; margin: 18px 0 10px; }
+.sec-title { font-size: 13px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; }
+
+/* ── BUTTONS ── */
+.btn {
+  font-family: var(--font); font-size: 13px; font-weight: 600;
+  padding: 10px 18px; border-radius: 10px;
+  border: 1px solid var(--border2); background: transparent;
+  color: var(--text); cursor: pointer; transition: all .15s;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.btn:active { transform: scale(.97); }
+.btn-primary { background: var(--purple); border-color: var(--purple); color: white; }
+.btn-primary:hover { background: var(--purple2); }
+.btn-sm { font-size: 12px; padding: 7px 13px; border-radius: 8px; }
+.btn-ghost { border-color: transparent; color: var(--muted); }
+.btn-danger { color: var(--red); border-color: transparent; }
+.btn-danger:hover { background: rgba(239,68,68,.1); }
+.btn-full { width: 100%; justify-content: center; }
+
+/* ── INPUTS ── */
+.inp {
+  font-family: var(--font); font-size: 14px;
+  background: var(--surface2); border: 1px solid var(--border2);
+  border-radius: 10px; padding: 11px 14px;
+  color: var(--text); outline: none; width: 100%;
+  transition: border-color .15s;
+}
+.inp:focus { border-color: var(--purple); }
+.inp-row { display: flex; gap: 8px; margin-bottom: 10px; }
+.inp-row .inp { flex: 1; }
+.lbl { font-size: 12px; font-weight: 500; color: var(--muted); margin-bottom: 6px; display: block; }
+.form-group { margin-bottom: 14px; }
+
+/* ── CHALLENGE CARD ── */
+.chal-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 10px;
+  position: relative; overflow: hidden;
+  cursor: pointer; transition: border-color .2s;
+}
+.chal-card:active { opacity: .85; }
+.chal-card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px; }
+.chal-icon-name { display: flex; align-items: center; gap: 10px; }
+.chal-icon { font-size: 22px; }
+.chal-name { font-size: 15px; font-weight: 600; }
+.chal-dates { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.chal-dots { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 10px; }
+.chal-dot {
+  width: 10px; height: 10px; border-radius: 3px;
+  background: var(--surface3); transition: background .2s;
+  cursor: pointer;
+}
+.chal-dot.done { background: var(--green); }
+.chal-dot.missed { background: rgba(239,68,68,.4); }
+.chal-dot.today { outline: 2px solid var(--purple2); outline-offset: 1px; }
+
+/* ── HISTORY ── */
+.hist-day {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-bottom: 8px;
+  cursor: pointer; transition: border-color .2s;
+}
+.hist-day:active { border-color: var(--purple); }
+.hist-day-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.hist-date-lbl { font-size: 13px; font-weight: 600; }
+.hist-score { font-size: 12px; font-family: var(--mono); color: var(--purple2); }
+.hist-dots { display: flex; flex-wrap: wrap; gap: 4px; }
+.hist-dot { width: 10px; height: 10px; border-radius: 3px; }
+
+/* ── CALENDAR ── */
+.cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 4px; }
+.cal-hdr { font-size: 10px; color: var(--muted); text-align: center; padding: 4px 0; font-weight: 600; }
+.cal-day {
+  aspect-ratio: 1; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 500; font-family: var(--mono);
+  cursor: pointer; transition: all .15s;
+  border: 1px solid transparent;
+}
+.cal-day.empty { background: none; cursor: default; }
+.cal-day.perfect { background: rgba(139,92,246,.3); color: var(--purple2); border-color: rgba(139,92,246,.4); }
+.cal-day.good { background: rgba(16,185,129,.2); color: var(--green); }
+.cal-day.partial { background: rgba(245,158,11,.15); color: var(--amber); }
+.cal-day.missed { background: rgba(239,68,68,.1); color: rgba(239,68,68,.6); }
+.cal-day.today { border-color: var(--purple); font-weight: 700; }
+.cal-day.future { color: var(--muted2); }
+
+/* ── MODAL ── */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.7);
+  backdrop-filter: blur(4px); z-index: 200;
+  display: flex; align-items: flex-end; justify-content: center;
+  opacity: 0; pointer-events: none; transition: opacity .25s;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal {
+  background: var(--bg2); border: 1px solid var(--border2);
+  border-radius: 20px 20px 0 0;
+  padding: 20px 20px calc(20px + env(safe-area-inset-bottom));
+  width: 100%; max-height: 90vh; overflow-y: auto;
+  transform: translateY(100%); transition: transform .3s cubic-bezier(.4,0,.2,1);
+}
+.modal-overlay.open .modal { transform: translateY(0); }
+.modal-handle { width: 36px; height: 4px; background: var(--surface3); border-radius: 99px; margin: 0 auto 16px; }
+.modal-title { font-size: 18px; font-weight: 700; margin-bottom: 18px; }
+
+/* ── STREAK FLAME ── */
+.streak-display { text-align: center; padding: 24px 0 16px; }
+.streak-num { font-size: 64px; font-weight: 700; font-family: var(--mono); line-height: 1; background: linear-gradient(135deg, var(--purple2), var(--pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.streak-label { font-size: 14px; color: var(--muted); margin-top: 6px; }
+
+/* ── EMPTY STATE ── */
+.empty { text-align: center; padding: 40px 20px; color: var(--muted); }
+.empty-icon { font-size: 40px; margin-bottom: 10px; }
+.empty-text { font-size: 14px; }
+
+/* ── PLAYLIST BADGE ── */
+.pl-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 12px; padding: 5px 10px; border-radius: 8px;
+  background: var(--surface2); border: 1px solid var(--border);
+  cursor: pointer; transition: all .15s; margin: 3px;
+}
+.pl-badge.active { background: rgba(139,92,246,.2); border-color: var(--purple); color: var(--purple2); }
+
+/* ── COLOR SWATCHES ── */
+.color-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+.color-swatch { width: 28px; height: 28px; border-radius: 8px; cursor: pointer; border: 2px solid transparent; transition: border-color .15s; }
+.color-swatch.selected { border-color: white; }
+
+/* ── DIVIDER ── */
+.divider { height: 1px; background: var(--border); margin: 16px 0; }
+
+/* ── MANAGE ITEM ── */
+.manage-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 0; border-bottom: 1px solid var(--border);
+}
+.manage-item:last-child { border-bottom: none; }
+.manage-item-icon { width: 32px; height: 32px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+.manage-item-name { flex: 1; font-size: 14px; }
+
+/* ── NAV MONTH ── */
+.month-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.month-nav-btn { background: var(--surface2); border: 1px solid var(--border); color: var(--text); border-radius: 8px; padding: 6px 14px; cursor: pointer; font-size: 16px; }
+.month-name { font-size: 15px; font-weight: 600; }
+
+/* ── TODAY SCORE RING ── */
+.score-ring-wrap { display: flex; align-items: center; gap: 16px; padding: 4px 0; }
+.score-ring { position: relative; width: 70px; height: 70px; flex-shrink: 0; }
+.score-ring svg { transform: rotate(-90deg); }
+.score-ring-num { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; font-family: var(--mono); }
+.score-ring-info { flex: 1; }
+.score-ring-title { font-size: 17px; font-weight: 700; }
+.score-ring-sub { font-size: 12px; color: var(--muted); margin-top: 3px; }
+
+/* ── GLOW PURPLE LINE ── */
+.purple-line { height: 2px; background: linear-gradient(90deg, transparent, var(--purple), var(--pink), transparent); margin: 0 -16px 20px; opacity: .5; }
+
+/* ── CHALLENGE CREATE FORM ── */
+.duration-opts { display: flex; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
+.dur-btn { font-size: 12px; padding: 6px 14px; border-radius: 8px; border: 1px solid var(--border2); background: transparent; color: var(--muted); cursor: pointer; transition: all .15s; font-family: var(--font); }
+.dur-btn.active { background: rgba(139,92,246,.2); border-color: var(--purple); color: var(--purple2); }
 </style>
 </head>
 <body>
-<div class="app">
+<div id="app">
+  <div id="content">
 
-<nav class="sidebar">
-  <div class="sb-logo">
-    <div class="sb-logo-title">🔥 365 DISCIPLINE</div>
-    <div class="sb-logo-sub">"Don't break the chain."</div>
-  </div>
-  <div class="sb-sec">Main</div>
-  <div class="nav-item active" onclick="showView('dashboard',this)"><span class="nav-icon">◈</span>Dashboard</div>
-  <div class="nav-item" onclick="showView('today',this)"><span class="nav-icon">○</span>Today<span class="nav-badge" id="nb-today">0/0</span></div>
-  <div class="nav-item" onclick="showView('history',this)"><span class="nav-icon">⊟</span>Edit history</div>
-  <div class="nav-item" onclick="showView('calendar',this)"><span class="nav-icon">▦</span>Calendar</div>
-  <div class="sb-sec">Playlists</div>
-  <div id="sb-playlists"></div>
-  <div class="sb-sec">Challenges</div>
-  <div id="sb-challenges"></div>
-  <div class="nav-item" onclick="showView('manage',this)"><span class="nav-icon">+</span>Manage all</div>
-  <div class="sb-footer"><div class="sb-day" id="sb-daychip">Day 26 / 365</div></div>
-</nav>
-
-<main class="main">
-
-  <!-- DASHBOARD -->
-  <div class="view active" id="view-dashboard">
-    <div class="page-header">
-      <div><div class="page-title">Dashboard</div><div class="page-sub" id="dash-datesub"></div></div>
-      <span class="badge bo" id="dash-streakbadge">🔥 0 day streak</span>
-    </div>
-    <div class="g4" id="dash-metrics"></div>
-    <div class="card"><div class="card-title">Active challenges</div><div id="dash-challenges"></div></div>
-    <div class="card"><div class="card-title">Habit performance — this month</div><div id="dash-perf"></div></div>
-    <div class="card"><div class="card-title">Last 7 days</div><div style="overflow-x:auto"><table class="wtbl"><thead><tr><th>Date</th><th>Score</th><th>Status</th><th>Streak</th><th></th></tr></thead><tbody id="dash-wtbody"></tbody></table></div></div>
-  </div>
-
-  <!-- TODAY -->
-  <div class="view" id="view-today">
-    <div class="page-header">
-      <div><div class="page-title">Today</div><div class="page-sub" id="today-datelbl"></div></div>
-      <div id="today-statusbadge"></div>
-    </div>
-    <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap">
-      <div class="card" style="flex:0 0 auto;text-align:center;padding:20px 24px;margin-bottom:0">
-        <div style="font-size:11px;color:var(--muted);margin-bottom:4px;letter-spacing:.05em">STREAK</div>
-        <div style="font-size:44px;font-weight:600;color:var(--orange);font-family:var(--mono);line-height:1" id="today-streaknum">0</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:4px">days</div>
-      </div>
-      <div class="card" style="flex:1;min-width:200px;margin-bottom:0">
-        <div style="font-size:13px;font-weight:500;margin-bottom:10px">Today's score</div>
-        <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:8px">
-          <div style="font-size:36px;font-weight:600;font-family:var(--mono)" id="today-scorebig">0</div>
-          <div style="font-size:15px;color:var(--muted)">/ <span id="today-scoretotal">0</span></div>
-          <div id="today-scorebadge" style="margin-left:4px"></div>
+    <!-- ══ HOME PAGE ══ -->
+    <div class="page active" id="page-home">
+      <div class="topbar">
+        <div>
+          <div class="topbar-title" id="home-greeting">Good morning 👋</div>
+          <div class="topbar-sub" id="home-date"></div>
         </div>
-        <div class="prog"><div class="prog-fill" id="today-scorebar" style="background:var(--green);width:0%"></div></div>
+        <div class="chip chip-purple" id="home-streak-chip">🔥 0 days</div>
       </div>
-    </div>
-    <div class="pl-tabs" id="today-pltabs"></div>
-    <div id="today-plviews"></div>
-    <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
-      <button class="btn btn-primary" onclick="markAllToday(true)">✓ Mark all done</button>
-      <button class="btn btn-danger" onclick="markAllToday(false)">✕ Reset day</button>
-    </div>
-  </div>
+      <div class="purple-line"></div>
 
-  <!-- HISTORY -->
-  <div class="view" id="view-history">
-    <div class="page-header">
-      <div><div class="page-title">Edit history</div><div class="page-sub">Click any day — streak recalculates automatically</div></div>
-      <div style="display:flex;gap:6px">
-        <button class="btn btn-sm" onclick="histNav(-1)">← Prev</button>
-        <button class="btn btn-sm btn-ghost" id="hist-monthlbl" style="min-width:90px">Mar 2026</button>
-        <button class="btn btn-sm" onclick="histNav(1)">Next →</button>
-      </div>
-    </div>
-    <div class="card" style="padding:10px"><div id="hist-list"></div></div>
-    <div id="hist-editwrap"></div>
-  </div>
-
-  <!-- CALENDAR -->
-  <div class="view" id="view-calendar">
-    <div class="page-header">
-      <div><div class="page-title">Calendar</div><div class="page-sub">Click any day to edit</div></div>
-      <div style="display:flex;gap:4px;flex-wrap:wrap">
-        <span class="badge bg">Perfect</span><span class="badge ba">Partial</span><span class="badge br">Missed</span>
-      </div>
-    </div>
-    <div class="card">
-      <div style="font-size:13px;font-weight:500;margin-bottom:12px">March 2026</div>
-      <div class="cal-grid" id="cal-hdrs" style="margin-bottom:6px"></div>
-      <div class="cal-grid" id="cal-days"></div>
-    </div>
-    <div class="g3">
-      <div class="metric-tile"><div class="m-lbl">Perfect days</div><div class="m-val" style="color:var(--green)" id="cal-perf">0</div></div>
-      <div class="metric-tile"><div class="m-lbl">Partial days</div><div class="m-val" style="color:var(--amber)" id="cal-part">0</div></div>
-      <div class="metric-tile"><div class="m-lbl">Missed days</div><div class="m-val" style="color:var(--red)" id="cal-miss">0</div></div>
-    </div>
-  </div>
-
-  <!-- MANAGE -->
-  <div class="view" id="view-manage">
-    <div class="page-header">
-      <div><div class="page-title">Manage</div><div class="page-sub">Playlists, habits, and date-range challenges</div></div>
-    </div>
-    <div class="card">
-      <div class="card-title">Add new playlist</div>
-      <div class="form-row" style="margin-bottom:0">
-        <div class="form-group" style="flex:1"><input class="inp" id="new-pl-name" placeholder="Playlist name" style="width:100%"></div>
-        <div class="form-group"><input class="inp" id="new-pl-icon" placeholder="Icon" style="width:60px"></div>
-        <button class="btn btn-primary" onclick="addPlaylist()">+ Add</button>
-      </div>
-    </div>
-    <div id="pl-manager"></div>
-    <div class="card" style="border-color:var(--purple-d)">
-      <div class="card-title" style="color:var(--purple)">🎯 Add date-range challenge</div>
-      <div style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6">Create a habit that runs from one date to another — like "run every day from Mar 26 to Apr 30". It shows as a challenge card AND appears in Today during those dates.</div>
-      <div style="background:var(--surface2);border-radius:10px;padding:14px">
-        <div class="form-row">
-          <div class="form-group" style="flex:2;min-width:140px">
-            <div class="form-lbl">Challenge name</div>
-            <input class="inp" id="nc-name" placeholder="e.g. Morning run, Cold shower streak" style="width:100%">
+      <!-- Score ring -->
+      <div class="card card-glow" style="margin-bottom:12px">
+        <div class="score-ring-wrap">
+          <div class="score-ring">
+            <svg width="70" height="70" viewBox="0 0 70 70">
+              <circle cx="35" cy="35" r="28" fill="none" stroke="rgba(139,92,246,.15)" stroke-width="7"/>
+              <circle id="score-ring-arc" cx="35" cy="35" r="28" fill="none" stroke="url(#ringGrad)" stroke-width="7" stroke-linecap="round" stroke-dasharray="175.9" stroke-dashoffset="175.9"/>
+              <defs>
+                <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#8b5cf6"/>
+                  <stop offset="100%" stop-color="#ec4899"/>
+                </linearGradient>
+              </defs>
+            </svg>
+            <div class="score-ring-num" id="score-ring-num">0%</div>
           </div>
-          <div class="form-group">
-            <div class="form-lbl">Icon</div>
-            <input class="inp" id="nc-icon" placeholder="🏃" style="width:64px">
-          </div>
-          <div class="form-group">
-            <div class="form-lbl">Color</div>
-            <input type="color" class="inp" id="nc-color" value="#9b6ef3" style="width:48px;height:36px;padding:2px;cursor:pointer">
+          <div class="score-ring-info">
+            <div class="score-ring-title" id="score-ring-title">Start your day!</div>
+            <div class="score-ring-sub" id="score-ring-sub">0 of 0 habits done</div>
+            <div style="margin-top:8px">
+              <div class="prog-wrap"><div class="prog-fill" id="home-prog" style="width:0%;background:linear-gradient(90deg,var(--purple),var(--pink))"></div></div>
+            </div>
           </div>
         </div>
-        <div class="form-row">
-          <div class="form-group" style="flex:1;min-width:130px">
-            <div class="form-lbl">Start date</div>
-            <input type="date" class="inp" id="nc-start" style="width:100%">
-          </div>
-          <div class="form-group" style="flex:1;min-width:130px">
-            <div class="form-lbl">End date</div>
-            <input type="date" class="inp" id="nc-end" style="width:100%">
-          </div>
-          <div class="form-group" style="flex:1;min-width:130px">
-            <div class="form-lbl">Also add to playlist</div>
-            <select class="inp" id="nc-playlist" style="width:100%">
-              <option value="">— Standalone —</option>
-            </select>
-          </div>
-        </div>
-        <button class="btn btn-purple" onclick="addChallenge()">🎯 Create challenge</button>
       </div>
-      <div style="margin-top:14px" id="challenge-manager"></div>
+
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-tile" style="--c1:var(--purple);--c2:var(--pink)">
+          <div class="stat-label">Best Streak</div>
+          <div class="stat-val" id="stat-best" style="color:var(--purple2)">0</div>
+          <div class="stat-sub">days 🏆</div>
+        </div>
+        <div class="stat-tile" style="--c1:var(--cyan);--c2:var(--green)">
+          <div class="stat-label">Total Days</div>
+          <div class="stat-val" id="stat-total" style="color:var(--cyan)">0</div>
+          <div class="stat-sub">logged</div>
+        </div>
+      </div>
+
+      <!-- Today's habits preview -->
+      <div class="sec-hdr">
+        <div class="sec-title">Today's Habits</div>
+        <button class="btn btn-ghost btn-sm" onclick="switchPage('today')">See all →</button>
+      </div>
+      <div class="card" id="home-habits-preview"></div>
+
+      <!-- Active challenges -->
+      <div class="sec-hdr">
+        <div class="sec-title">Active Challenges</div>
+        <button class="btn btn-ghost btn-sm" onclick="switchPage('challenges')">See all →</button>
+      </div>
+      <div id="home-challenges-preview"></div>
     </div>
+
+    <!-- ══ TODAY PAGE ══ -->
+    <div class="page" id="page-today">
+      <div class="topbar">
+        <div>
+          <div class="topbar-title">Today</div>
+          <div class="topbar-sub" id="today-date-lbl"></div>
+        </div>
+        <div id="today-score-chip" class="chip chip-purple">0 / 0</div>
+      </div>
+      <div class="purple-line"></div>
+
+      <!-- Playlist filter -->
+      <div style="margin-bottom:14px;display:flex;flex-wrap:wrap;gap:0" id="today-pl-filter"></div>
+
+      <div id="today-habits-list"></div>
+
+      <div style="display:flex;gap:8px;margin-top:8px;margin-bottom:4px">
+        <button class="btn btn-sm" style="flex:1" onclick="markAllToday(true)">✓ Mark All Done</button>
+        <button class="btn btn-sm btn-ghost" style="flex:1" onclick="markAllToday(false)">✕ Clear All</button>
+      </div>
+    </div>
+
+    <!-- ══ CHALLENGES PAGE ══ -->
+    <div class="page" id="page-challenges">
+      <div class="topbar">
+        <div>
+          <div class="topbar-title">Challenges</div>
+          <div class="topbar-sub">Track your streaks</div>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="openModal('modal-new-chal')">+ New</button>
+      </div>
+      <div class="purple-line"></div>
+      <div id="challenges-list"></div>
+    </div>
+
+    <!-- ══ HISTORY PAGE ══ -->
+    <div class="page" id="page-history">
+      <div class="topbar">
+        <div>
+          <div class="topbar-title">History</div>
+          <div class="topbar-sub" id="hist-month-lbl"></div>
+        </div>
+      </div>
+      <div class="purple-line"></div>
+      <div class="month-nav">
+        <button class="month-nav-btn" onclick="histNav(-1)">‹</button>
+        <div class="month-name" id="hist-nav-month"></div>
+        <button class="month-nav-btn" onclick="histNav(1)">›</button>
+      </div>
+      <!-- Calendar -->
+      <div class="card" style="margin-bottom:14px">
+        <div class="cal-grid" id="cal-headers"></div>
+        <div class="cal-grid" id="cal-days" style="margin-top:4px"></div>
+      </div>
+      <!-- Day list -->
+      <div id="hist-days-list"></div>
+    </div>
+
+    <!-- ══ MANAGE PAGE ══ -->
+    <div class="page" id="page-manage">
+      <div class="topbar">
+        <div class="topbar-title">Manage</div>
+      </div>
+      <div class="purple-line"></div>
+
+      <!-- Playlists -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <div class="sec-title" style="margin:0">Playlists</div>
+        <button class="btn btn-primary btn-sm" onclick="openModal('modal-new-pl')">+ Playlist</button>
+      </div>
+      <div id="pl-list" class="card" style="margin-bottom:16px"></div>
+
+      <!-- Challenges manage -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <div class="sec-title" style="margin:0">Challenges</div>
+        <button class="btn btn-primary btn-sm" onclick="openModal('modal-new-chal')">+ Challenge</button>
+      </div>
+      <div id="chal-manage-list" class="card"></div>
+    </div>
+
+  </div><!-- /content -->
+
+  <!-- ══ NAVBAR ══ -->
+  <nav id="navbar">
+    <button class="nb-btn active" id="nb-home" onclick="switchPage('home')">
+      <div class="nb-dot"></div>
+      <div class="nb-icon">🏠</div>
+      <div class="nb-label">Home</div>
+    </button>
+    <button class="nb-btn" id="nb-today" onclick="switchPage('today')">
+      <div class="nb-dot"></div>
+      <div class="nb-icon">✅</div>
+      <div class="nb-label">Today</div>
+    </button>
+    <button class="nb-btn" id="nb-challenges" onclick="switchPage('challenges')">
+      <div class="nb-dot"></div>
+      <div class="nb-icon">🔥</div>
+      <div class="nb-label">Challenges</div>
+    </button>
+    <button class="nb-btn" id="nb-history" onclick="switchPage('history')">
+      <div class="nb-dot"></div>
+      <div class="nb-icon">📅</div>
+      <div class="nb-label">History</div>
+    </button>
+    <button class="nb-btn" id="nb-manage" onclick="switchPage('manage')">
+      <div class="nb-dot"></div>
+      <div class="nb-icon">⚙️</div>
+      <div class="nb-label">Manage</div>
+    </button>
+  </nav>
+</div>
+
+<!-- ══ MODALS ══ -->
+
+<!-- New Playlist Modal -->
+<div class="modal-overlay" id="modal-new-pl" onclick="closeModalOutside(event,'modal-new-pl')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">New Playlist</div>
+    <div class="form-group">
+      <label class="lbl">Playlist Name</label>
+      <input class="inp" id="np-name" placeholder="e.g. Morning Routine" maxlength="30">
+    </div>
+    <div class="form-group">
+      <label class="lbl">Icon (emoji)</label>
+      <input class="inp" id="np-icon" placeholder="☀️" maxlength="2">
+    </div>
+    <button class="btn btn-primary btn-full" onclick="addPlaylist()">Create Playlist</button>
   </div>
+</div>
 
-  <div id="dyn-pl-views"></div>
-  <div id="dyn-chal-views"></div>
+<!-- Add Habit Modal -->
+<div class="modal-overlay" id="modal-add-habit" onclick="closeModalOutside(event,'modal-add-habit')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="add-habit-title">Add Habit</div>
+    <div class="form-group">
+      <label class="lbl">Habit Name</label>
+      <input class="inp" id="ah-name" placeholder="e.g. Morning Walk" maxlength="40">
+    </div>
+    <div class="form-group">
+      <label class="lbl">Color</label>
+      <div class="color-row" id="ah-colors"></div>
+    </div>
+    <input type="hidden" id="ah-pl-id">
+    <input type="hidden" id="ah-color" value="#8b5cf6">
+    <button class="btn btn-primary btn-full" onclick="addHabit()">Add Habit</button>
+  </div>
+</div>
 
-</main>
+<!-- New Challenge Modal -->
+<div class="modal-overlay" id="modal-new-chal" onclick="closeModalOutside(event,'modal-new-chal')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">New Challenge</div>
+    <div class="form-group">
+      <label class="lbl">Challenge Name</label>
+      <input class="inp" id="nc-name" placeholder="e.g. No-Skip November" maxlength="40">
+    </div>
+    <div class="inp-row">
+      <div style="flex:1">
+        <label class="lbl">Icon</label>
+        <input class="inp" id="nc-icon" placeholder="🔥" maxlength="2">
+      </div>
+      <div style="flex:1">
+        <label class="lbl">Color</label>
+        <input class="inp" type="color" id="nc-color" value="#8b5cf6" style="height:44px;padding:4px 8px;cursor:pointer">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="lbl">Duration</label>
+      <div class="duration-opts" id="nc-durations"></div>
+    </div>
+    <div class="inp-row">
+      <div style="flex:1">
+        <label class="lbl">Start Date</label>
+        <input class="inp" type="date" id="nc-start">
+      </div>
+      <div style="flex:1">
+        <label class="lbl">End Date</label>
+        <input class="inp" type="date" id="nc-end">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="lbl">Linked Playlist (optional)</label>
+      <select class="inp" id="nc-playlist"><option value="">— Standalone —</option></select>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="addChallenge()">Start Challenge 🚀</button>
+  </div>
+</div>
+
+<!-- Challenge Detail Modal -->
+<div class="modal-overlay" id="modal-chal-detail" onclick="closeModalOutside(event,'modal-chal-detail')">
+  <div class="modal" id="modal-chal-detail-body"></div>
+</div>
+
+<!-- Playlist Detail Modal -->
+<div class="modal-overlay" id="modal-pl-detail" onclick="closeModalOutside(event,'modal-pl-detail')">
+  <div class="modal" id="modal-pl-detail-body"></div>
 </div>
 
 <script>
-const _now=new Date();
-const TODAY_DAY=_now.getDate()-1, BASE_YEAR=_now.getFullYear(), BASE_MON=_now.getMonth();
-const TODAYKEY=mkKey(BASE_YEAR,BASE_MON,TODAY_DAY+1);
+// ══════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════
+const COLORS = ['#8b5cf6','#ec4899','#06b6d4','#10b981','#f59e0b','#ef4444','#a78bfa','#f97316'];
 
-function daysInMonth(y,m){return new Date(y,m+1,0).getDate()}
-function mkKey(y,m,d){return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`}
-function dateToKey(dt){return mkKey(dt.getFullYear(),dt.getMonth(),dt.getDate())}
-function keyToDate(k){const[y,m,d]=k.split('-').map(Number);return new Date(y,m-1,d)}
-function fmtDate(dt,opts){return dt.toLocaleDateString('en-IN',opts||{month:'short',day:'numeric'})}
-function addDays(dt,n){const d=new Date(dt);d.setDate(d.getDate()+n);return d}
-
-const DEFAULT_STATE={
-  playlists:[
-    {id:'pl_morning',name:'Morning',icon:'\u2600',habits:[
-      {id:'h1',name:'Wake up 5am',color:'#FAC775'},
-      {id:'h2',name:'Cold shower',color:'#B5D4F4'},
+const DEFAULT_STATE = {
+  playlists: [
+    { id:'pl_morning', name:'Morning', icon:'☀️', habits:[
+      { id:'h1', name:'Wake up 5am', color:'#f59e0b' },
+      { id:'h2', name:'Cold shower', color:'#06b6d4' },
     ]},
-    {id:'pl_grind',name:'Grind',icon:'\u26a1',habits:[
-      {id:'h3',name:'DSA practice',color:'#EF9F27'},
-      {id:'h4',name:'Deep study 2hr',color:'#F5C4B3'},
+    { id:'pl_grind', name:'Grind', icon:'⚡', habits:[
+      { id:'h3', name:'DSA practice', color:'#8b5cf6' },
+      { id:'h4', name:'Deep study 2hr', color:'#ec4899' },
     ]},
-    {id:'pl_body',name:'Body',icon:'\ud83d\udcaa',habits:[
-      {id:'h5',name:'Workout',color:'#D85A30'},
-      {id:'h6',name:'No junk food',color:'#9FE1CB'},
+    { id:'pl_body', name:'Body', icon:'💪', habits:[
+      { id:'h5', name:'Workout', color:'#10b981' },
+      { id:'h6', name:'No junk food', color:'#f97316' },
     ]}
   ],
-  challenges:[],
-  days:{}
+  challenges: [],
+  days: {}
 };
-function loadState(){try{const r=localStorage.getItem('discipline365');if(r)return JSON.parse(r);}catch(e){}return JSON.parse(JSON.stringify(DEFAULT_STATE));}
-function saveState(){try{localStorage.setItem('discipline365',JSON.stringify(S));}catch(e){}}
-let S=loadState();
 
-function getAllHabits(){return S.playlists.flatMap(p=>p.habits)}
+function loadState() {
+  try { const r = localStorage.getItem('discipline365_v2'); if (r) return JSON.parse(r); } catch(e) {}
+  return JSON.parse(JSON.stringify(DEFAULT_STATE));
+}
+function saveState() {
+  try { localStorage.setItem('discipline365_v2', JSON.stringify(S)); } catch(e) {}
+}
+let S = loadState();
 
-function habitsForKey(k){
-  const dt=keyToDate(k);
-  const base=getAllHabits();
-  const chalHabs=S.challenges
-    .filter(c=>{const s=new Date(c.start),e=new Date(c.end);return dt>=s&&dt<=e})
-    .map(c=>({id:c.id,name:c.name,color:c.color,isChallenge:true,chalIcon:c.icon}));
-  return [...base,...chalHabs];
+// ══════════════════════════════════════════
+//  DATE UTILS
+// ══════════════════════════════════════════
+const _now = new Date();
+function todayKey() {
+  return `${_now.getFullYear()}-${String(_now.getMonth()+1).padStart(2,'0')}-${String(_now.getDate()).padStart(2,'0')}`;
+}
+function mkKey(y,m,d) { return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`; }
+function keyToDate(k) { const[y,m,d]=k.split('-').map(Number); return new Date(y,m-1,d); }
+function daysInMonth(y,m) { return new Date(y,m+1,0).getDate(); }
+function addDays(dt,n) { const d=new Date(dt); d.setDate(d.getDate()+n); return d; }
+function fmtDate(dt, opts) {
+  return dt.toLocaleDateString('en-IN', opts || {weekday:'short',month:'short',day:'numeric'});
 }
 
-function recalcStreaks(){
-  // Sort all stored day keys and recalc streak across entire history
-  const keys=Object.keys(S.days).sort();
-  let streak=0;
-  for(let i=0;i<keys.length;i++){
-    const k=keys[i];
-    const habs=habitsForKey(k);
-    const score=habs.filter(h=>S.days[k].done[h.id]).length;
-    if(score===habs.length&&habs.length>0){
-      // Check for gap from previous day
-      if(i>0){const prev=keys[i-1];const diff=(keyToDate(k)-keyToDate(prev))/864e5;if(diff>1) streak=0;}
-      streak++;
-    } else streak=0;
-    S.days[k].streak=streak;
+const TKEY = todayKey();
+
+// ══════════════════════════════════════════
+//  STATE HELPERS
+// ══════════════════════════════════════════
+function getAllHabits() { return S.playlists.flatMap(p => p.habits); }
+function getPlaylistOfHabit(hId) { return S.playlists.find(p => p.habits.some(h => h.id === hId)); }
+
+function ensureDay(k) {
+  if (!S.days[k]) S.days[k] = { done: {}, streak: 0 };
+  getAllHabits().forEach(h => { if (S.days[k].done[h.id] === undefined) S.days[k].done[h.id] = false; });
+}
+
+function getScore(k) {
+  if (!S.days[k]) return { done: 0, total: 0 };
+  const habits = getAllHabits();
+  const done = habits.filter(h => S.days[k].done[h.id]).length;
+  return { done, total: habits.length };
+}
+
+function recalcStreaks() {
+  // Global streak
+  let streak = 0, best = 0, cur = 0;
+  const keys = Object.keys(S.days).sort();
+  const today = new Date(TKEY);
+  for (let i = 0; i < 365; i++) {
+    const dt = new Date(today); dt.setDate(dt.getDate() - i);
+    const k = mkKey(dt.getFullYear(), dt.getMonth(), dt.getDate());
+    const sc = getScore(k);
+    if (sc.total > 0 && sc.done === sc.total) { if (i === 0 || cur > 0) cur++; }
+    else if (i > 0) { if (cur > best) best = cur; cur = 0; }
   }
+  if (cur > best) best = cur;
+  S.streak = cur;
+  S.bestStreak = Math.max(S.bestStreak || 0, best);
 }
 
-function getScore(k){
-  if(!S.days[k]) return {score:0,max:0};
-  const habs=habitsForKey(k);
-  return {score:habs.filter(h=>S.days[k].done[h.id]).length,max:habs.length};
+// ══════════════════════════════════════════
+//  NAVIGATION
+// ══════════════════════════════════════════
+let currentPage = 'home';
+function switchPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nb-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.getElementById('nb-' + name).classList.add('active');
+  document.getElementById('content').scrollTo(0, 0);
+  currentPage = name;
+  if (name === 'home') renderHome();
+  if (name === 'today') renderToday();
+  if (name === 'challenges') renderChallenges();
+  if (name === 'history') renderHistory();
+  if (name === 'manage') renderManage();
 }
 
-function getStatus(score,max){
-  if(max===0) return {label:'No habits',cls:'ba'};
-  if(score===max) return {label:'Perfect',cls:'bg'};
-  if(score>=Math.ceil(max*0.5)) return {label:'Partial',cls:'ba'};
-  return {label:'Missed',cls:'br'};
+// ══════════════════════════════════════════
+//  MODALS
+// ══════════════════════════════════════════
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+  if (id === 'modal-new-chal') initChalModal();
+  if (id === 'modal-new-pl') { document.getElementById('np-name').value=''; document.getElementById('np-icon').value=''; }
 }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function closeModalOutside(e, id) { if (e.target.id === id) closeModal(id); }
 
-function ensureDay(k){
-  if(!S.days[k]) S.days[k]={done:{},streak:0};
-  habitsForKey(k).forEach(h=>{if(S.days[k].done[h.id]===undefined) S.days[k].done[h.id]=false;});
-}
-
-recalcStreaks();
-
-// NAVIGATION
-function showView(name,el){
-  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  const v=document.getElementById('view-'+name);
-  if(v) v.classList.add('active');
-  if(el) el.classList.add('active');
-  renders[name]&&renders[name]();
-}
-function showPlaylistView(plId){
-  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  let el=document.getElementById('vpl-'+plId);
-  if(!el){el=document.createElement('div');el.className='view';el.id='vpl-'+plId;document.getElementById('dyn-pl-views').appendChild(el);}
-  el.classList.add('active');
-  document.querySelector(`.nav-item[data-pl="${plId}"]`)?.classList.add('active');
-  renderPlaylistDetail(plId,el);
-}
-function showChallengeView(cId){
-  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  let el=document.getElementById('vchal-'+cId);
-  if(!el){el=document.createElement('div');el.className='view';el.id='vchal-'+cId;document.getElementById('dyn-chal-views').appendChild(el);}
-  el.classList.add('active');
-  document.querySelector(`.nav-item[data-chal="${cId}"]`)?.classList.add('active');
-  renderChallengeDetail(cId,el);
-}
-
-const renders={dashboard:renderDashboard,today:renderToday,history:renderHistory,calendar:renderCalendar,manage:renderManage};
-
-// DASHBOARD
-function renderDashboard(){
-  const today=new Date(BASE_YEAR,BASE_MON,TODAY_DAY+1);
-  const monthPrefix=`${BASE_YEAR}-${String(BASE_MON+1).padStart(2,'0')}-`;
-  let perf=0,monthScore=0,bestStreak=0;
-  // Loop only days in current month up to today
-  for(let d=1;d<=TODAY_DAY+1;d++){
-    const k=mkKey(BASE_YEAR,BASE_MON,d);
-    if(!S.days[k]) continue;
-    const {score,max}=getScore(k);
-    monthScore+=score;
-    if(score===max&&max>0) perf++;
-    if(S.days[k].streak>bestStreak) bestStreak=S.days[k].streak;
-  }
-  // Also check best streak across all stored days
-  Object.values(S.days).forEach(d=>{if(d.streak>bestStreak) bestStreak=d.streak;});
-  const curStreak=S.days[TODAYKEY]?.streak||0;
-  document.getElementById('dash-datesub').textContent=today.toLocaleDateString('en-IN',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
-  document.getElementById('dash-streakbadge').textContent=`🔥 ${curStreak} day streak`;
-  document.getElementById('dash-metrics').innerHTML=`
-    <div class="metric-tile"><div class="m-lbl">Current streak</div><div class="m-val" style="color:var(--orange)">${curStreak}</div><div class="m-sub">days</div></div>
-    <div class="metric-tile"><div class="m-lbl">Monthly score</div><div class="m-val">${monthScore}</div><div class="m-sub">pts this month</div></div>
-    <div class="metric-tile"><div class="m-lbl">Best streak</div><div class="m-val">${bestStreak}</div><div class="m-sub">days</div></div>
-    <div class="metric-tile"><div class="m-lbl">Perfect days</div><div class="m-val">${perf}</div><div class="m-sub">this month</div></div>
-  `;
-  const active=S.challenges.filter(c=>new Date(c.start)<=today&&new Date(c.end)>=today);
-  document.getElementById('dash-challenges').innerHTML=active.length?active.map(c=>miniChalCard(c)).join(''):
-    `<div style="font-size:12px;color:var(--muted)">No active challenges. <button class="btn btn-sm btn-ghost" onclick="showView('manage')">Add one →</button></div>`;
-  // Habit perf bars — use all stored days
-  const allH=getAllHabits();
-  const allKeys=Object.keys(S.days).sort();
-  const colors=['#EF9F27','#5DCAA5','#378ADD','#D85A30','#639922','#E8621C','#9b6ef3','#E04580'];
-  document.getElementById('dash-perf').innerHTML=allH.length?allH.map((h,i)=>{
-    let cnt=0,tot=allKeys.length;
-    allKeys.forEach(k=>{if(S.days[k]?.done[h.id]) cnt++;});
-    const pct=tot?Math.round(cnt/tot*100):0;
-    return `<div style="display:flex;align-items:center;gap:8px;margin-bottom:7px">
-      <div style="font-size:12px;color:var(--muted);width:120px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${h.name}</div>
-      <div style="flex:1;height:6px;background:var(--surface3);border-radius:99px;overflow:hidden"><div style="height:100%;border-radius:99px;background:${colors[i%colors.length]};width:${pct}%"></div></div>
-      <div style="font-size:11px;color:var(--muted);width:30px;text-align:right;font-family:var(--mono)">${pct}%</div>
-    </div>`;
-  }).join(''):`<div style="font-size:12px;color:var(--muted)">No habits tracked yet.</div>`;
-  // Last 7 days table — dynamic
-  const tbody=document.getElementById('dash-wtbody');tbody.innerHTML='';
-  const last7=[];
-  for(let i=6;i>=0;i--){
-    const dt=addDays(today,-i);
-    last7.push({k:dateToKey(dt),dt,isT:i===0});
-  }
-  last7.forEach(({k,dt,isT})=>{
-    if(!S.days[k]) return;
-    const {score,max}=getScore(k);const st=getStatus(score,max);
-    const tr=document.createElement('tr');
-    tr.innerHTML=`<td>${fmtDate(dt)}${isT?' <span class="badge bo">Today</span>':''}</td>
-      <td style="font-family:var(--mono)">${score}/${max}</td><td><span class="badge ${st.cls}">${st.label}</span></td>
-      <td style="color:var(--orange);font-family:var(--mono)">${S.days[k].streak>0?'🔥'+S.days[k].streak:'—'}</td>
-      <td><button class="btn btn-sm" onclick="quickEditDate('${k}')">Edit</button></td>`;
-    tbody.appendChild(tr);
-  });
-}
-
-function miniChalCard(c){
-  const start=new Date(c.start),end=new Date(c.end),today=new Date(BASE_YEAR,BASE_MON,TODAY_DAY+1);
-  const totalDays=Math.round((end-start)/(864e5))+1;
-  const elapsed=Math.round((today-start)/(864e5))+1;
-  let done=0;
-  for(let i=0;i<elapsed;i++){const k=dateToKey(addDays(start,i));if(S.days[k]?.done[c.id])done++;}
-  const pct=Math.round(done/Math.max(elapsed,1)*100);
-  return `<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surface2);border-radius:8px;border-left:3px solid ${c.color};margin-bottom:8px;cursor:pointer" onclick="showChallengeView('${c.id}')">
-    <div style="font-size:18px">${c.icon||'🎯'}</div>
-    <div style="flex:1">
-      <div style="font-size:13px;font-weight:500">${c.name}</div>
-      <div style="font-size:11px;color:var(--muted);margin-top:1px">Day ${elapsed} of ${totalDays} · ${done}/${elapsed} done</div>
-      <div class="prog" style="margin-top:6px"><div class="prog-fill" style="width:${pct}%;background:${c.color}"></div></div>
-    </div>
-    <div style="font-size:20px;font-weight:600;font-family:var(--mono);color:${c.color}">${pct}%</div>
-  </div>`;
-}
-
-// TODAY
-function renderToday(){
-  ensureDay(TODAYKEY);
-  document.getElementById('today-datelbl').textContent=new Date(BASE_YEAR,BASE_MON,TODAY_DAY+1).toLocaleDateString('en-IN',{weekday:'long',month:'long',day:'numeric'});
-  const habs=habitsForKey(TODAYKEY);
-  const today=new Date(BASE_YEAR,BASE_MON,TODAY_DAY+1);
-  const activeChals=S.challenges.filter(c=>new Date(c.start)<=today&&new Date(c.end)>=today);
-  const allTabs=[{id:'all',name:'All',icon:'◈',habits:habs},...S.playlists];
-  if(activeChals.length) allTabs.push({id:'chal',name:'Challenges',icon:'🎯',habits:activeChals.map(c=>({id:c.id,name:c.name,color:c.color,isChallenge:true,chalIcon:c.icon}))});
-  document.getElementById('today-pltabs').innerHTML=allTabs.map(pl=>
-    `<button class="pl-tab" id="ttab-${pl.id}" onclick="switchTodayPl('${pl.id}')">${pl.icon} ${pl.name}<span class="plc">${pl.habits.length}</span></button>`
+function initChalModal() {
+  const today = TKEY;
+  document.getElementById('nc-name').value = '';
+  document.getElementById('nc-icon').value = '';
+  document.getElementById('nc-start').value = today;
+  const end30 = addDays(new Date(today), 29);
+  document.getElementById('nc-end').value = mkKey(end30.getFullYear(), end30.getMonth(), end30.getDate());
+  // Duration buttons
+  const durEl = document.getElementById('nc-durations');
+  durEl.innerHTML = [7,21,30,66,90,365].map(d =>
+    `<button class="dur-btn ${d===30?'active':''}" onclick="setDuration(${d},this)">${d} days</button>`
   ).join('');
-  document.getElementById('today-plviews').innerHTML=allTabs.map(pl=>
-    `<div class="pl-view" id="tview-${pl.id}"><div class="card" style="margin-bottom:0">${pl.habits.map(h=>buildTHRow(h)).join('')}</div></div>`
+  // Playlist select
+  const sel = document.getElementById('nc-playlist');
+  sel.innerHTML = '<option value="">— Standalone —</option>' + S.playlists.map(p =>
+    `<option value="${p.id}">${p.icon} ${p.name}</option>`
   ).join('');
-  switchTodayPl('all');
-  updateTodayStats();
 }
 
-function buildTHRow(h){
-  const done=S.days[TODAYKEY]?.done[h.id];
-  const tag=h.isChallenge?`<span class="h-tag">${h.chalIcon||'🎯'} challenge</span>`:'';
-  return `<div class="habit-row">
-    <div class="h-icon" style="background:${h.color}22;color:${h.color}">✦</div>
-    <div class="h-name">${h.name}${tag}</div>
-    <div class="h-check ${done?'on':''}" id="thc-${h.id}" onclick="toggleTodayHabit('${h.id}')">${done?'✓':''}</div>
-  </div>`;
+function setDuration(days, btn) {
+  document.querySelectorAll('.dur-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const start = new Date(document.getElementById('nc-start').value || TKEY);
+  const end = addDays(start, days - 1);
+  document.getElementById('nc-end').value = mkKey(end.getFullYear(), end.getMonth(), end.getDate());
 }
 
-function switchTodayPl(plId){
-  document.querySelectorAll('.pl-tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.pl-view').forEach(v=>v.classList.remove('active'));
-  document.getElementById('ttab-'+plId)?.classList.add('active');
-  document.getElementById('tview-'+plId)?.classList.add('active');
-}
+// ══════════════════════════════════════════
+//  HOME
+// ══════════════════════════════════════════
+function renderHome() {
+  // Greeting
+  const h = _now.getHours();
+  const greet = h < 12 ? 'Good morning 👋' : h < 17 ? 'Good afternoon 👋' : 'Good evening 👋';
+  document.getElementById('home-greeting').textContent = greet;
+  document.getElementById('home-date').textContent = fmtDate(_now, {weekday:'long',month:'long',day:'numeric'});
 
-function toggleTodayHabit(hId){
-  ensureDay(TODAYKEY);
-  S.days[TODAYKEY].done[hId]=!S.days[TODAYKEY].done[hId];
-  document.querySelectorAll(`[id="thc-${hId}"]`).forEach(el=>{
-    el.className='h-check'+(S.days[TODAYKEY].done[hId]?' on':'');
-    el.textContent=S.days[TODAYKEY].done[hId]?'✓':'';
-  });
-  recalcStreaks();saveState();updateTodayStats();
-}
+  ensureDay(TKEY);
+  recalcStreaks();
+  const sc = getScore(TKEY);
+  const pct = sc.total ? Math.round(sc.done / sc.total * 100) : 0;
 
-function updateTodayStats(){
-  const {score,max}=getScore(TODAYKEY);
-  const pct=max?Math.round(score/max*100):0;
-  const st=getStatus(score,max);
-  document.getElementById('today-scorebig').textContent=score;
-  document.getElementById('today-scoretotal').textContent=max;
-  document.getElementById('today-scorebar').style.width=pct+'%';
-  document.getElementById('today-scorebadge').innerHTML=`<span class="badge ${st.cls}">${st.label}</span>`;
-  document.getElementById('today-statusbadge').innerHTML=`<span class="badge ${st.cls}" style="font-size:13px;padding:4px 12px">${st.label}</span>`;
-  document.getElementById('today-streaknum').textContent=S.days[TODAYKEY]?.streak||0;
-  document.getElementById('nb-today').textContent=score+'/'+max;
-}
+  // Streak chip
+  document.getElementById('home-streak-chip').textContent = `🔥 ${S.streak || 0} days`;
 
-function markAllToday(v){
-  ensureDay(TODAYKEY);
-  habitsForKey(TODAYKEY).forEach(h=>{S.days[TODAYKEY].done[h.id]=v;});
-  recalcStreaks();saveState();renderToday();
-}
+  // Score ring
+  const circ = 175.9;
+  const offset = circ - (circ * pct / 100);
+  document.getElementById('score-ring-arc').style.strokeDashoffset = offset;
+  document.getElementById('score-ring-num').textContent = pct + '%';
+  document.getElementById('score-ring-title').textContent = pct === 100 ? 'Perfect day! 🎉' : pct > 50 ? 'Great progress!' : sc.done > 0 ? 'Keep going!' : 'Start your day!';
+  document.getElementById('score-ring-sub').textContent = `${sc.done} of ${sc.total} habits done`;
+  document.getElementById('home-prog').style.width = pct + '%';
 
-// HISTORY
-let histOff=0,histSel=null;
-function histNav(d){histOff=Math.max(-3,Math.min(0,histOff+d));histSel=null;document.getElementById('hist-editwrap').innerHTML='';renderHistory();}
+  // Stats
+  document.getElementById('stat-best').textContent = S.bestStreak || 0;
+  document.getElementById('stat-total').textContent = Object.keys(S.days).length;
 
-function renderHistory(){
-  const m=((BASE_MON+histOff)%12+12)%12;
-  const y=BASE_YEAR+(BASE_MON+histOff<0?-1:0);
-  document.getElementById('hist-monthlbl').textContent=new Date(y,m,1).toLocaleDateString('en-IN',{month:'long',year:'numeric'});
-  const total=daysInMonth(y,m);
-  const wrap=document.getElementById('hist-list');wrap.innerHTML='';
-  for(let d=total;d>=1;d--){
-    const k=mkKey(y,m,d);const entry=S.days[k];const isToday=(y===BASE_YEAR&&m===BASE_MON&&d===TODAY_DAY+1);
-    const {score,max}=entry?getScore(k):{score:0,max:0};
-    const row=document.createElement('div');row.className='hist-row'+(histSel===k?' selected':'');
-    row.onclick=()=>openHistEdit(y,m,d,k);
-    const allH=habitsForKey(k).slice(0,12);
-    const dots=entry?allH.map(h=>`<div class="dot" style="background:${entry.done[h.id]?h.isChallenge?'#9b6ef3':'#2bb57e':'var(--surface3)'}"></div>`).join(''):`<span style="font-size:11px;color:var(--muted2)">No data</span>`;
-    row.innerHTML=`<div class="hist-dn">${d}</div>
-      <div class="hist-date">${fmtDate(new Date(y,m,d),{weekday:'short',month:'short',day:'numeric'})}</div>
-      <div class="hist-dots">${dots}</div>
-      <div class="hist-score">${entry?score+'/'+max:'—'}</div>
-      <div class="hist-streak">${entry&&entry.streak>0?'🔥'+entry.streak:''}</div>
-      ${isToday?'<span class="badge bo" style="font-size:10px">Today</span>':''}`;
-    wrap.appendChild(row);
+  // Habits preview (first 4)
+  const habits = getAllHabits().slice(0, 4);
+  const previewEl = document.getElementById('home-habits-preview');
+  if (!habits.length) {
+    previewEl.innerHTML = `<div class="empty"><div class="empty-icon">📝</div><div class="empty-text">No habits yet.<br>Add some in Manage!</div></div>`;
+  } else {
+    previewEl.innerHTML = habits.map(h => habitRowHTML(h, TKEY, true)).join('');
+  }
+
+  // Active challenges preview
+  const chalEl = document.getElementById('home-challenges-preview');
+  const today = new Date(TKEY);
+  const active = S.challenges.filter(c => new Date(c.start) <= today && new Date(c.end) >= today);
+  if (!active.length) {
+    chalEl.innerHTML = `<div class="card"><div class="empty" style="padding:20px 0"><div class="empty-icon">🎯</div><div class="empty-text">No active challenges.<br><button class="btn btn-primary btn-sm" style="margin-top:8px" onclick="switchPage('challenges')">Create one!</button></div></div></div>`;
+  } else {
+    chalEl.innerHTML = active.slice(0,2).map(c => miniChalHTML(c)).join('');
   }
 }
 
-function openHistEdit(y,m,d,k){
-  histSel=k;ensureDay(k);renderHistory();
-  const habs=habitsForKey(k);const {score,max}=getScore(k);const st=getStatus(score,max);
-  const dateStr=new Date(y,m,d).toLocaleDateString('en-IN',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
-  const dt=new Date(y,m,d);
-  const activeChals=S.challenges.filter(c=>new Date(c.start)<=dt&&new Date(c.end)>=dt);
-  const sections=[
-    ...S.playlists.filter(pl=>pl.habits.length>0).map(pl=>({id:pl.id,icon:pl.icon,name:pl.name,habits:pl.habits})),
-    ...activeChals.map(c=>({id:'c_'+c.id,icon:c.icon||'🎯',name:c.name+' (Challenge)',habits:[{id:c.id,name:c.name,color:c.color}],isChallenge:true}))
-  ];
-  const sectHtml=sections.map(sec=>{
-    const doneN=sec.habits.filter(h=>S.days[k].done[h.id]).length;
-    const accentStyle=sec.isChallenge?`style="border-color:var(--purple-d)"`:'';
-    return `<div class="sec-card" ${accentStyle} id="esec-${k.replace(/-/g,'_')}-${sec.id}">
-      <div class="sec-hdr" onclick="this.parentElement.classList.toggle('collapsed')">
-        <span style="font-size:14px">${sec.icon}</span>
-        <div class="sec-name">${sec.name}${sec.isChallenge?'<span class="h-tag" style="margin-left:6px">challenge</span>':''}</div>
-        <div class="sec-meta">${doneN}/${sec.habits.length}</div>
-        <div class="sec-chev">▾</div>
-      </div>
-      <div class="sec-body">
-        ${sec.habits.map(h=>{
-          const on=S.days[k].done[h.id];
-          return `<div class="habit-row">
-            <div class="h-icon" style="background:${h.color}22;color:${h.color}">✦</div>
-            <div class="h-name">${h.name}</div>
-            <div class="h-check ${on?'on':''}" id="ehc-${k}-${h.id}" onclick="toggleEditHabit('${k}','${h.id}')">${on?'✓':''}</div>
-          </div>`;
-        }).join('')}
-      </div>
-    </div>`;
-  }).join('');
-  document.getElementById('hist-editwrap').innerHTML=`<div class="edit-panel">
-    <div class="ep-header"><div class="ep-title">${dateStr}</div><span class="badge ${st.cls}" id="ep-badge">${st.label}</span></div>
-    ${sectHtml}
-    <div style="display:flex;gap:6px;margin-top:12px;flex-wrap:wrap;align-items:center">
-      <button class="btn btn-primary btn-sm" onclick="editMarkAll('${k}',true)">✓ All done</button>
-      <button class="btn btn-danger btn-sm" onclick="editMarkAll('${k}',false)">✕ Reset</button>
-      <button class="btn btn-ghost btn-sm" style="margin-left:auto" onclick="closeHistEdit()">Done</button>
+function habitRowHTML(h, k, mini) {
+  const done = S.days[k]?.done[h.id];
+  const pl = getPlaylistOfHabit(h.id);
+  return `<div class="habit-row" onclick="toggleHabit('${h.id}','${k}')">
+    <div class="h-icon" style="background:${h.color}22;color:${h.color}">${pl?.icon||'•'}</div>
+    <div class="h-info">
+      <div class="h-name" style="${done?'text-decoration:line-through;color:var(--muted)':''}">${h.name}</div>
+      ${!mini ? `<div class="h-pl">${pl?.name||''}</div>` : ''}
     </div>
-    <div style="font-size:11px;color:var(--muted);margin-top:8px">Streak recalculates automatically for all subsequent days.</div>
+    <div class="h-check ${done?'on':''}">${done?'✓':''}</div>
   </div>`;
 }
 
-function toggleEditHabit(k,hId){
-  S.days[k].done[hId]=!S.days[k].done[hId];
-  document.querySelectorAll(`[id^="ehc-${k}-${hId}"]`).forEach(el=>{
-    el.className='h-check'+(S.days[k].done[hId]?' on':'');el.textContent=S.days[k].done[hId]?'✓':'';
-  });
-  recalcStreaks();saveState();
-  const badge=document.getElementById('ep-badge');
-  if(badge){badge.className='badge '+st.cls;badge.textContent=st.label;}
-  S.playlists.forEach(pl=>{
-    const doneN=pl.habits.filter(h=>S.days[k].done[h.id]).length;
-    const el=document.querySelector(`#esec-${k.replace(/-/g,'_')}-${pl.id} .sec-meta`);
-    if(el) el.textContent=doneN+'/'+pl.habits.length;
-  });
-  renderHistory();
-}
-
-function editMarkAll(k,v){
-  habitsForKey(k).forEach(h=>{S.days[k].done[h.id]=v;});
-  recalcStreaks();saveState();
-  const dt=keyToDate(k);
-  openHistEdit(dt.getFullYear(),dt.getMonth(),dt.getDate(),k);
-  renderHistory();
-}
-function closeHistEdit(){histSel=null;document.getElementById('hist-editwrap').innerHTML='';renderHistory();}
-function quickEdit(d){showView('history',document.querySelector('.nav-item[onclick*="history"]'));setTimeout(()=>openHistEdit(BASE_YEAR,BASE_MON,d,mkKey(BASE_YEAR,BASE_MON,d)),60);}
-function quickEditDate(k){
-  const dt=keyToDate(k);
-  showView('history',document.querySelector('.nav-item[onclick*="history"]'));
-  setTimeout(()=>openHistEdit(dt.getFullYear(),dt.getMonth(),dt.getDate(),k),60);
-}
-
-// CALENDAR
-function renderCalendar(){
-  const hWrap=document.getElementById('cal-hdrs');
-  if(!hWrap.children.length) ['Su','Mo','Tu','We','Th','Fr','Sa'].forEach(h=>{const e=document.createElement('div');e.className='cal-hdr-cell';e.textContent=h;hWrap.appendChild(e);});
-  const wrap=document.getElementById('cal-days');wrap.innerHTML='';
-  const firstDay=new Date(BASE_YEAR,BASE_MON,1).getDay();
-  const total=daysInMonth(BASE_YEAR,BASE_MON);
-  let perf=0,part=0,miss=0;
-  for(let i=0;i<firstDay;i++){const e=document.createElement('div');wrap.appendChild(e);}
-  for(let d=1;d<=total;d++){
-    const k=mkKey(BASE_YEAR,BASE_MON,d);
-    const el=document.createElement('div');el.className='cal-day';el.textContent=d;
-    if(d===TODAY_DAY+1) el.classList.add('ct');
-    if(S.days[k]){
-      const {score,max}=getScore(k);
-      if(score===max&&max>0){el.classList.add('cp');perf++;}
-      else if(score>=Math.ceil(max*0.5)){el.classList.add('ca');part++;}
-      else{el.classList.add('cm');miss++;}
-    } else el.classList.add('ce');
-    el.onclick=()=>quickEdit(d);
-    wrap.appendChild(el);
+function miniChalHTML(c) {
+  const start = new Date(c.start), end = new Date(c.end);
+  const today = new Date(TKEY);
+  const total = Math.round((end - start) / 864e5) + 1;
+  const elapsed = Math.min(Math.round((today - start) / 864e5) + 1, total);
+  let done = 0;
+  for (let i = 0; i < elapsed; i++) {
+    const dt = addDays(start, i);
+    const k = mkKey(dt.getFullYear(), dt.getMonth(), dt.getDate());
+    if (S.days[k]?.done[c.id]) done++;
   }
-  document.getElementById('cal-perf').textContent=perf;
-  document.getElementById('cal-part').textContent=part;
-  document.getElementById('cal-miss').textContent=miss;
+  const pct = elapsed > 0 ? Math.round(done / elapsed * 100) : 0;
+  return `<div class="chal-card" onclick="openChalDetail('${c.id}')">
+    <div class="chal-card-top">
+      <div class="chal-icon-name">
+        <div class="chal-icon">${c.icon||'🎯'}</div>
+        <div><div class="chal-name">${c.name}</div><div class="chal-dates">Day ${elapsed}/${total}</div></div>
+      </div>
+      <span class="chip chip-purple" style="font-size:12px">${pct}%</span>
+    </div>
+    <div class="prog-wrap"><div class="prog-fill" style="width:${pct}%;background:${c.color}"></div></div>
+  </div>`;
 }
 
-// MANAGE
-function renderManage(){renderPlManager();renderChalManager();refreshChalSelect();}
+// ══════════════════════════════════════════
+//  TODAY
+// ══════════════════════════════════════════
+let todayPl = 'all';
+function renderToday() {
+  ensureDay(TKEY);
+  document.getElementById('today-date-lbl').textContent = fmtDate(_now, {weekday:'long',month:'long',day:'numeric'});
 
-function renderPlManager(){
-  document.getElementById('pl-manager').innerHTML=S.playlists.map(pl=>`
-    <div class="sec-card" id="plm-${pl.id}">
-      <div class="sec-hdr" onclick="this.parentElement.classList.toggle('collapsed')">
-        <span style="font-size:15px">${pl.icon}</span>
-        <div class="sec-name">${pl.name}</div>
-        <div class="sec-meta">${pl.habits.length} habits</div>
-        <button class="btn btn-sm btn-danger" style="margin-right:6px" onclick="event.stopPropagation();deletePlaylist('${pl.id}')">Delete</button>
-        <div class="sec-chev">▾</div>
-      </div>
-      <div class="sec-body">
-        ${pl.habits.map(h=>`<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border)">
-          <div style="width:14px;height:14px;border-radius:4px;background:${h.color};flex-shrink:0"></div>
-          <div style="flex:1;font-size:13px">${h.name}</div>
-          <button class="btn btn-sm btn-danger" onclick="deleteHabit('${pl.id}','${h.id}')">✕</button>
-        </div>`).join('')}
-        <div class="form-row" style="margin-top:10px;margin-bottom:0">
-          <input class="inp" id="nh-name-${pl.id}" placeholder="New habit name" style="flex:1;min-width:120px">
-          <input type="color" class="inp" id="nh-color-${pl.id}" value="#5DCAA5" style="width:40px;height:36px;padding:2px;cursor:pointer">
-          <button class="btn btn-primary btn-sm" onclick="addHabit('${pl.id}')">+ Add</button>
+  const sc = getScore(TKEY);
+  document.getElementById('today-score-chip').textContent = `${sc.done} / ${sc.total}`;
+
+  // Playlist filter
+  const filterEl = document.getElementById('today-pl-filter');
+  filterEl.innerHTML = `<button class="pl-badge ${todayPl==='all'?'active':''}" onclick="setTodayPl('all')">All</button>` +
+    S.playlists.map(p => `<button class="pl-badge ${todayPl===p.id?'active':''}" onclick="setTodayPl('${p.id}')">${p.icon} ${p.name}</button>`).join('');
+
+  // Habits
+  const listEl = document.getElementById('today-habits-list');
+  const habits = todayPl === 'all' ? getAllHabits() : (S.playlists.find(p=>p.id===todayPl)?.habits||[]);
+  if (!habits.length) {
+    listEl.innerHTML = `<div class="card"><div class="empty"><div class="empty-icon">📝</div><div class="empty-text">No habits here.<br>Add some in Manage!</div></div></div>`;
+    return;
+  }
+  // Group by playlist
+  if (todayPl === 'all') {
+    listEl.innerHTML = S.playlists.filter(p => p.habits.length > 0).map(p => {
+      const done = p.habits.filter(h => S.days[TKEY]?.done[h.id]).length;
+      return `<div style="margin-bottom:4px">
+        <div class="sec-hdr" style="margin-top:0;margin-bottom:6px">
+          <div style="display:flex;align-items:center;gap:6px">
+            <span>${p.icon}</span>
+            <span class="sec-title" style="margin:0">${p.name}</span>
+          </div>
+          <span class="chip chip-purple" style="font-size:11px">${done}/${p.habits.length}</span>
+        </div>
+        <div class="card" style="margin-bottom:8px">${p.habits.map(h => habitRowHTML(h, TKEY, false)).join('')}</div>
+      </div>`;
+    }).join('');
+  } else {
+    listEl.innerHTML = `<div class="card">${habits.map(h => habitRowHTML(h, TKEY, false)).join('')}</div>`;
+  }
+}
+
+function setTodayPl(plId) { todayPl = plId; renderToday(); }
+
+function toggleHabit(hId, k) {
+  ensureDay(k);
+  S.days[k].done[hId] = !S.days[k].done[hId];
+  recalcStreaks(); saveState();
+  if (currentPage === 'today') renderToday();
+  if (currentPage === 'home') renderHome();
+}
+
+function markAllToday(v) {
+  ensureDay(TKEY);
+  getAllHabits().forEach(h => S.days[TKEY].done[h.id] = v);
+  recalcStreaks(); saveState(); renderToday();
+}
+
+// ══════════════════════════════════════════
+//  CHALLENGES
+// ══════════════════════════════════════════
+function renderChallenges() {
+  const el = document.getElementById('challenges-list');
+  if (!S.challenges.length) {
+    el.innerHTML = `<div class="empty" style="padding:60px 0"><div class="empty-icon">🔥</div><div class="empty-text">No challenges yet.<br>Start your first one!</div></div>`;
+    return;
+  }
+  const today = new Date(TKEY);
+  el.innerHTML = S.challenges.map(c => {
+    const start = new Date(c.start), end = new Date(c.end);
+    const active = start <= today && end >= today;
+    const total = Math.round((end - start) / 864e5) + 1;
+    const elapsed = Math.min(Math.max(Math.round((today - start) / 864e5) + 1, 0), total);
+    let done = 0;
+    for (let i = 0; i < elapsed; i++) {
+      const dt = addDays(start, i);
+      const k = mkKey(dt.getFullYear(), dt.getMonth(), dt.getDate());
+      if (S.days[k]?.done[c.id]) done++;
+    }
+    const pct = elapsed > 0 ? Math.round(done / elapsed * 100) : 0;
+    const todayDone = S.days[TKEY]?.done[c.id];
+    return `<div class="chal-card" style="border-color:${c.color}33" onclick="openChalDetail('${c.id}')">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:${c.color}"></div>
+      <div class="chal-card-top">
+        <div class="chal-icon-name">
+          <div class="chal-icon">${c.icon||'🎯'}</div>
+          <div>
+            <div class="chal-name">${c.name}</div>
+            <div class="chal-dates">${c.start} → ${c.end}</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
+          ${active ? `<span class="chip chip-pink" style="font-size:10px">LIVE</span>` : ''}
+          <span style="font-size:13px;font-weight:700;font-family:var(--mono);color:${c.color}">${pct}%</span>
         </div>
       </div>
-    </div>
-  `).join('');
-}
-
-function renderChalManager(){
-  document.getElementById('challenge-manager').innerHTML=S.challenges.length?S.challenges.map(c=>`
-    <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--surface2);border-radius:10px;border-left:3px solid ${c.color};margin-bottom:8px;cursor:pointer" onclick="showChallengeView('${c.id}')">
-      <div style="font-size:18px">${c.icon||'🎯'}</div>
-      <div style="flex:1">
-        <div style="font-size:13px;font-weight:500">${c.name}</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:2px">${c.start} → ${c.end}</div>
-      </div>
-      <button class="btn btn-sm btn-danger" onclick="event.stopPropagation();deleteChallenge('${c.id}')">Delete</button>
-    </div>
-  `).join(''):`<div style="font-size:12px;color:var(--muted)">No challenges yet.</div>`;
-}
-
-function refreshChalSelect(){
-  const sel=document.getElementById('nc-playlist');if(!sel) return;
-  sel.innerHTML=`<option value="">— Standalone —</option>`+S.playlists.map(pl=>`<option value="${pl.id}">${pl.icon} ${pl.name}</option>`).join('');
-}
-
-function addPlaylist(){
-  const name=document.getElementById('new-pl-name').value.trim();
-  const icon=document.getElementById('new-pl-icon').value.trim()||'★';
-  if(!name) return;
-  S.playlists.push({id:'pl_'+Date.now(),name,icon,habits:[]});
-  document.getElementById('new-pl-name').value='';document.getElementById('new-pl-icon').value='';
-  saveState();renderSidebarPlaylists();renderManage();
-}
-function deletePlaylist(plId){
-  if(!confirm('Delete playlist?')) return;
-  S.playlists=S.playlists.filter(p=>p.id!==plId);
-  saveState();renderSidebarPlaylists();renderManage();
-}
-function addHabit(plId){
-  const nameEl=document.getElementById('nh-name-'+plId);
-  const colorEl=document.getElementById('nh-color-'+plId);
-  const name=nameEl.value.trim();if(!name) return;
-  const h={id:'h_'+Date.now(),name,color:colorEl.value};
-  S.playlists.find(p=>p.id===plId)?.habits.push(h);
-  Object.keys(S.days).forEach(k=>{if(!S.days[k].done[h.id]) S.days[k].done[h.id]=false;});
-  nameEl.value='';saveState();renderSidebarPlaylists();renderManage();
-}
-function deleteHabit(plId,hId){
-  const pl=S.playlists.find(p=>p.id===plId);if(pl) pl.habits=pl.habits.filter(h=>h.id!==hId);
-  recalcStreaks();saveState();renderManage();
-}
-function addChallenge(){
-  const name=document.getElementById('nc-name').value.trim();
-  const icon=document.getElementById('nc-icon').value.trim()||'🎯';
-  const color=document.getElementById('nc-color').value;
-  const start=document.getElementById('nc-start').value;
-  const end=document.getElementById('nc-end').value;
-  const plId=document.getElementById('nc-playlist').value;
-  if(!name||!start||!end){alert('Fill in name, start, and end date.');return;}
-  if(start>end){alert('Start date must be before end date.');return;}
-  const c={id:'chal_'+Date.now(),name,icon,color,start,end,playlistId:plId};
-  S.challenges.push(c);
-  if(plId){const pl=S.playlists.find(p=>p.id===plId);if(pl) pl.habits.push({id:c.id,name:c.name,color:c.color});}
-  document.getElementById('nc-name').value='';document.getElementById('nc-icon').value='';
-  saveState();renderSidebarChallenges();renderManage();
-}
-function deleteChallenge(cId){
-  if(!confirm('Delete challenge?')) return;
-  S.challenges=S.challenges.filter(c=>c.id!==cId);
-  S.playlists.forEach(pl=>{pl.habits=pl.habits.filter(h=>h.id!==cId);});
-  saveState();renderSidebarChallenges();renderManage();
-}
-
-// PLAYLIST DETAIL
-function renderPlaylistDetail(plId,container){
-  const pl=S.playlists.find(p=>p.id===plId);if(!pl){container.innerHTML='<div class="card">Not found.</div>';return;}
-  ensureDay(TODAYKEY);
-  const score=pl.habits.filter(h=>S.days[TODAYKEY]?.done[h.id]).length;
-  container.innerHTML=`
-    <div class="page-header"><div><div class="page-title">${pl.icon} ${pl.name}</div><div class="page-sub">${pl.habits.length} habits · Today: ${score}/${pl.habits.length} done</div></div></div>
-    <div class="card"><div class="card-title">Today's habits</div>
-      ${pl.habits.map(h=>{
-        const done=S.days[TODAYKEY]?.done[h.id];
-        return `<div class="habit-row">
-          <div class="h-icon" style="background:${h.color}22;color:${h.color}">✦</div>
-          <div class="h-name">${h.name}</div>
-          <div class="h-check ${done?'on':''}" onclick="toggleTodayHabit('${h.id}');renderPlaylistDetail('${plId}',document.getElementById('vpl-${plId}'))">${done?'✓':''}</div>
-        </div>`;
-      }).join('')}
-    </div>
-    <div class="card"><div class="card-title">All-time performance</div>
-      ${pl.habits.map(h=>{
-        const allKeys=Object.keys(S.days);
-        const tot=allKeys.length;
-        const cnt=allKeys.filter(k=>S.days[k]?.done[h.id]).length;
-        const pct=tot?Math.round(cnt/tot*100):0;
-        return `<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-          <div style="font-size:12px;color:var(--muted);width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex-shrink:0">${h.name}</div>
-          <div style="flex:1;height:6px;background:var(--surface3);border-radius:99px;overflow:hidden"><div style="height:100%;border-radius:99px;background:${h.color};width:${pct}%"></div></div>
-          <div style="font-size:11px;color:var(--muted);width:32px;text-align:right;font-family:var(--mono)">${pct}%</div>
-        </div>`;
-      }).join('')}
-    </div>`;
-}
-
-// CHALLENGE DETAIL
-function renderChallengeDetail(cId,container){
-  const c=S.challenges.find(ch=>ch.id===cId);if(!c){container.innerHTML='<div class="card">Not found.</div>';return;}
-  const start=new Date(c.start),end=new Date(c.end);
-  const totalDays=Math.round((end-start)/864e5)+1;
-  const today=new Date(BASE_YEAR,BASE_MON,TODAY_DAY+1);
-  const elapsed=Math.min(Math.round((today-start)/864e5)+1,totalDays);
-  let doneCount=0;const daysData=[];
-  for(let i=0;i<totalDays;i++){
-    const dt=addDays(start,i);const k=dateToKey(dt);
-    const isPast=dt<today;const isToday=dateToKey(dt)===dateToKey(today);
-    const done=S.days[k]?.done[c.id];
-    if((isPast||isToday)&&done) doneCount++;
-    daysData.push({dt,k,done,isPast,isToday});
-  }
-  const pct=elapsed>0?Math.round(doneCount/elapsed*100):0;
-  container.innerHTML=`
-    <div class="page-header">
-      <div><div class="page-title">${c.icon} ${c.name}</div><div class="page-sub">${c.start} → ${c.end} · ${totalDays} days total</div></div>
-      <span class="badge bp">${pct}% success rate</span>
-    </div>
-    <div class="challenge-card" style="border-color:${c.color}33">
-      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:${c.color}"></div>
-      <div class="chal-title">${c.icon} ${c.name}</div>
-      <div class="chal-sub">Day ${elapsed} of ${totalDays} · ${doneCount}/${elapsed} done · ${Math.max(0,totalDays-elapsed)} days remaining</div>
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-        <div style="flex:1"><div class="prog"><div class="prog-fill" style="width:${pct}%;background:${c.color}"></div></div></div>
-        <div style="font-size:14px;font-weight:600;font-family:var(--mono);color:${c.color}">${pct}%</div>
-      </div>
-      <div class="chal-days">
-        ${daysData.map(({dt,k,done,isPast,isToday})=>{
-          let cls='chal-dot pending';
-          if(isPast||isToday) cls=done?'chal-dot done':'chal-dot missed';
-          if(isToday) cls+=' today';
-          const label=fmtDate(dt)+': '+(done?'Done':'Missed');
-          return `<div class="${cls}" title="${label}" onclick="toggleChalDay('${cId}','${k}')"></div>`;
-        }).join('')}
-      </div>
-      <div style="font-size:11px;color:var(--muted);margin-top:8px">Click any dot to toggle done/missed</div>
-    </div>
-    <div class="card"><div class="card-title">Day-by-day log</div>
-      <div style="overflow-x:auto"><table class="wtbl">
-        <thead><tr><th>Date</th><th>Status</th><th>Action</th></tr></thead>
-        <tbody>
-          ${daysData.filter(r=>r.isPast||r.isToday).reverse().map(({dt,k,done,isToday})=>`
-            <tr>
-              <td>${fmtDate(dt,{weekday:'short',month:'short',day:'numeric'})}${isToday?' <span class="badge bo">Today</span>':''}</td>
-              <td>${done?'<span class="badge bg">✓ Done</span>':'<span class="badge br">✕ Missed</span>'}</td>
-              <td><button class="btn btn-sm" onclick="toggleChalDay('${cId}','${k}')">Toggle</button></td>
-            </tr>`).join('')}
-        </tbody>
-      </table></div>
-    </div>`;
-}
-
-function toggleChalDay(cId,k){
-  if(!S.days[k]) S.days[k]={done:{},streak:0};
-  S.days[k].done[cId]=!S.days[k].done[cId];
-  recalcStreaks();saveState();
-  renderChallengeDetail(cId,document.getElementById('vchal-'+cId));
-}
-
-// SIDEBAR
-function renderSidebarPlaylists(){
-  document.getElementById('sb-playlists').innerHTML=S.playlists.map(pl=>
-    `<div class="nav-item" data-pl="${pl.id}" onclick="showPlaylistView('${pl.id}')"><span class="nav-icon">${pl.icon}</span>${pl.name}<span class="nav-badge">${pl.habits.length}</span></div>`
-  ).join('');
-}
-function renderSidebarChallenges(){
-  const today=new Date(BASE_YEAR,BASE_MON,TODAY_DAY+1);
-  document.getElementById('sb-challenges').innerHTML=S.challenges.map(c=>{
-    const active=new Date(c.start)<=today&&new Date(c.end)>=today;
-    return `<div class="nav-item" data-chal="${c.id}" onclick="showChallengeView('${c.id}')">
-      <span class="nav-icon">${c.icon||'🎯'}</span>${c.name}
-      ${active?'<span class="nav-badge live">live</span>':''}
+      <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Day ${elapsed} of ${total} · ${done}/${elapsed} done</div>
+      <div class="prog-wrap"><div class="prog-fill" style="width:${pct}%;background:${c.color}"></div></div>
+      ${active ? `<div style="margin-top:10px;display:flex;align-items:center;gap:8px">
+        <div class="h-check ${todayDone?'on':''}" style="width:30px;height:30px" onclick="event.stopPropagation();toggleChalDay('${c.id}',TKEY)">${todayDone?'✓':''}</div>
+        <span style="font-size:13px;color:var(--muted)">Today's check-in</span>
+      </div>` : ''}
     </div>`;
   }).join('');
 }
 
-// BOOT
-// Day of year counter for sidebar chip
-(function(){
-  const start=new Date(_now.getFullYear(),0,0);
-  const diff=_now-start;
-  const oneDay=1000*60*60*24;
-  const dayOfYear=Math.floor(diff/oneDay);
-  document.getElementById('sb-daychip').textContent=`Day ${dayOfYear} / 365`;
-})();
+function toggleChalDay(cId, k) {
+  if (!S.days[k]) S.days[k] = { done: {}, streak: 0 };
+  S.days[k].done[cId] = !S.days[k].done[cId];
+  recalcStreaks(); saveState();
+  if (currentPage === 'challenges') renderChallenges();
+}
 
-renderSidebarPlaylists();renderSidebarChallenges();
-renderDashboard();renderToday();renderHistory();renderCalendar();
-const todayStr=`${BASE_YEAR}-${String(BASE_MON+1).padStart(2,'0')}-${String(TODAY_DAY+1).padStart(2,'0')}`;
-document.getElementById('nc-start').value=todayStr;
-// Default end date: last day of current month
-const lastDay=new Date(BASE_YEAR,BASE_MON+1,0);
-document.getElementById('nc-end').value=`${BASE_YEAR}-${String(BASE_MON+1).padStart(2,'0')}-${String(lastDay.getDate()).padStart(2,'0')}`;
+function openChalDetail(cId) {
+  const c = S.challenges.find(ch => ch.id === cId);
+  if (!c) return;
+  const start = new Date(c.start), end = new Date(c.end);
+  const today = new Date(TKEY);
+  const total = Math.round((end - start) / 864e5) + 1;
+  const elapsed = Math.min(Math.max(Math.round((today - start) / 864e5) + 1, 0), total);
+  let done = 0;
+  const dots = [];
+  for (let i = 0; i < total; i++) {
+    const dt = addDays(start, i);
+    const k = mkKey(dt.getFullYear(), dt.getMonth(), dt.getDate());
+    const isPast = dt < today, isToday = k === TKEY;
+    const d = S.days[k]?.done[cId];
+    if ((isPast || isToday) && d) done++;
+    let cls = 'chal-dot';
+    if (isPast || isToday) cls += d ? ' done' : ' missed';
+    if (isToday) cls += ' today';
+    dots.push(`<div class="${cls}" onclick="toggleChalDayDetail('${cId}','${k}')" title="${k}"></div>`);
+  }
+  const pct = elapsed > 0 ? Math.round(done / elapsed * 100) : 0;
+  document.getElementById('modal-chal-detail-body').innerHTML = `
+    <div class="modal-handle"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+      <div style="font-size:22px;font-weight:700">${c.icon||'🎯'} ${c.name}</div>
+      <button class="btn btn-ghost btn-sm" onclick="closeModal('modal-chal-detail')">✕</button>
+    </div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:16px">${c.start} → ${c.end} · ${total} days</div>
+    <div class="streak-display" style="padding:16px 0 12px">
+      <div class="streak-num" style="background:linear-gradient(135deg,${c.color},var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">${pct}%</div>
+      <div class="streak-label">Day ${elapsed} of ${total} · ${done} done</div>
+    </div>
+    <div class="prog-wrap" style="margin-bottom:16px"><div class="prog-fill" style="width:${pct}%;background:${c.color}"></div></div>
+    <div class="card-title">Progress dots (tap to toggle)</div>
+    <div class="chal-dots">${dots.join('')}</div>
+    <div style="font-size:11px;color:var(--muted);margin-top:8px;margin-bottom:16px">🟢 Done &nbsp; 🔴 Missed &nbsp; ⬛ Future</div>
+    <button class="btn btn-danger btn-sm" onclick="deleteChallenge('${cId}');closeModal('modal-chal-detail')">Delete Challenge</button>
+  `;
+  openModal('modal-chal-detail');
+}
 
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('./sw.js').then(()=>console.log('SW registered'));
+function toggleChalDayDetail(cId, k) {
+  if (!S.days[k]) S.days[k] = { done: {}, streak: 0 };
+  S.days[k].done[cId] = !S.days[k].done[cId];
+  recalcStreaks(); saveState();
+  openChalDetail(cId);
+}
+
+// ══════════════════════════════════════════
+//  HISTORY
+// ══════════════════════════════════════════
+let histYear = _now.getFullYear(), histMon = _now.getMonth();
+function histNav(d) {
+  histMon += d;
+  if (histMon < 0) { histMon = 11; histYear--; }
+  if (histMon > 11) { histMon = 0; histYear++; }
+  renderHistory();
+}
+
+function renderHistory() {
+  const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('hist-month-lbl').textContent = `${monthNames[histMon]} ${histYear}`;
+  document.getElementById('hist-nav-month').textContent = `${monthNames[histMon]} ${histYear}`;
+
+  // Calendar headers
+  const days7 = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+  document.getElementById('cal-headers').innerHTML = days7.map(d => `<div class="cal-hdr">${d}</div>`).join('');
+
+  const firstDay = new Date(histYear, histMon, 1).getDay();
+  const total = daysInMonth(histYear, histMon);
+  const todayFull = TKEY;
+  const habits = getAllHabits();
+
+  let calHTML = '';
+  for (let i = 0; i < firstDay; i++) calHTML += '<div class="cal-day empty"></div>';
+  for (let d = 1; d <= total; d++) {
+    const k = mkKey(histYear, histMon, d);
+    const sc = getScore(k);
+    const isFuture = k > todayFull, isToday = k === todayFull;
+    let cls = 'cal-day';
+    if (isFuture) cls += ' future';
+    else if (!sc.total) cls += ' future';
+    else if (sc.done === sc.total) cls += ' perfect';
+    else if (sc.done >= sc.total * 0.7) cls += ' good';
+    else if (sc.done > 0) cls += ' partial';
+    else cls += ' missed';
+    if (isToday) cls += ' today';
+    calHTML += `<div class="${cls}" onclick="calDayClick(${d})">${d}</div>`;
+  }
+  document.getElementById('cal-days').innerHTML = calHTML;
+
+  // Day list
+  const listEl = document.getElementById('hist-days-list');
+  const keys = [];
+  for (let d = total; d >= 1; d--) {
+    const k = mkKey(histYear, histMon, d);
+    if (k <= todayFull && S.days[k]) keys.push(k);
+  }
+  if (!keys.length) {
+    listEl.innerHTML = `<div class="empty"><div class="empty-icon">📭</div><div class="empty-text">No data for this month</div></div>`;
+    return;
+  }
+  listEl.innerHTML = keys.map(k => {
+    const sc = getScore(k);
+    const dt = keyToDate(k);
+    const dots = getAllHabits().map(h => {
+      const done = S.days[k]?.done[h.id];
+      return `<div class="hist-dot" style="background:${done ? h.color : 'var(--surface3)'}"></div>`;
+    }).join('');
+    const pct = sc.total ? Math.round(sc.done/sc.total*100) : 0;
+    return `<div class="hist-day">
+      <div class="hist-day-top">
+        <div class="hist-date-lbl">${fmtDate(dt)}</div>
+        <span class="hist-score">${sc.done}/${sc.total} · ${pct}%</span>
+      </div>
+      <div class="hist-dots">${dots}</div>
+    </div>`;
+  }).join('');
+}
+
+function calDayClick(d) {
+  const k = mkKey(histYear, histMon, d);
+  if (k > TKEY) return;
+  // scroll to day in list
+  ensureDay(k);
+  renderHistory();
+}
+
+// ══════════════════════════════════════════
+//  MANAGE
+// ══════════════════════════════════════════
+function renderManage() {
+  // Playlists
+  const plEl = document.getElementById('pl-list');
+  if (!S.playlists.length) {
+    plEl.innerHTML = `<div class="empty" style="padding:20px 0"><div class="empty-text">No playlists yet</div></div>`;
+  } else {
+    plEl.innerHTML = S.playlists.map(p => `
+      <div class="manage-item">
+        <div class="manage-item-icon" style="background:var(--surface2)">${p.icon}</div>
+        <div class="manage-item-name">${p.name} <span style="color:var(--muted);font-size:12px">(${p.habits.length} habits)</span></div>
+        <button class="btn btn-sm btn-ghost" onclick="openPlDetail('${p.id}')">Edit</button>
+        <button class="btn btn-sm btn-danger" onclick="deletePlaylist('${p.id}')">✕</button>
+      </div>
+    `).join('');
+  }
+
+  // Challenges manage
+  const chEl = document.getElementById('chal-manage-list');
+  if (!S.challenges.length) {
+    chEl.innerHTML = `<div class="empty" style="padding:20px 0"><div class="empty-text">No challenges yet</div></div>`;
+  } else {
+    chEl.innerHTML = S.challenges.map(c => `
+      <div class="manage-item">
+        <div class="manage-item-icon" style="background:${c.color}22">${c.icon||'🎯'}</div>
+        <div class="manage-item-name">${c.name} <span style="color:var(--muted);font-size:12px">(${c.start})</span></div>
+        <button class="btn btn-sm btn-danger" onclick="deleteChallenge('${c.id}')">✕</button>
+      </div>
+    `).join('');
+  }
+}
+
+function openPlDetail(plId) {
+  const pl = S.playlists.find(p => p.id === plId);
+  if (!pl) return;
+  document.getElementById('add-habit-title').textContent = `Add to ${pl.icon} ${pl.name}`;
+  document.getElementById('ah-pl-id').value = plId;
+  document.getElementById('ah-name').value = '';
+  // Color swatches
+  const sw = document.getElementById('ah-colors');
+  sw.innerHTML = COLORS.map(c => `<div class="color-swatch ${c===document.getElementById('ah-color').value?'selected':''}" style="background:${c}" onclick="selectColor('${c}',this)"></div>`).join('');
+
+  document.getElementById('modal-pl-detail-body').innerHTML = `
+    <div class="modal-handle"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div style="font-size:20px;font-weight:700">${pl.icon} ${pl.name}</div>
+      <button class="btn btn-ghost btn-sm" onclick="closeModal('modal-pl-detail')">✕</button>
+    </div>
+    <div class="card-title">Habits (${pl.habits.length})</div>
+    <div id="pl-detail-habits" style="margin-bottom:16px">
+      ${pl.habits.length ? pl.habits.map(h => `
+        <div class="manage-item">
+          <div class="manage-item-icon" style="background:${h.color}22;color:${h.color}">•</div>
+          <div class="manage-item-name">${h.name}</div>
+          <button class="btn btn-sm btn-danger" onclick="deleteHabit('${plId}','${h.id}');openPlDetail('${plId}')">✕</button>
+        </div>
+      `).join('') : '<div style="color:var(--muted);font-size:13px;padding:8px 0">No habits yet</div>'}
+    </div>
+    <div class="divider"></div>
+    <div class="card-title" style="margin-bottom:10px">Add New Habit</div>
+    <div class="form-group">
+      <input class="inp" id="ah-name" placeholder="Habit name" maxlength="40">
+    </div>
+    <div class="form-group">
+      <label class="lbl">Color</label>
+      <div class="color-row">${COLORS.map(c => `<div class="color-swatch" style="background:${c}" onclick="selectColor('${c}',this)"></div>`).join('')}</div>
+    </div>
+    <input type="hidden" id="ah-pl-id" value="${plId}">
+    <input type="hidden" id="ah-color" value="${COLORS[0]}">
+    <button class="btn btn-primary btn-full" onclick="addHabit()">Add Habit</button>
+  `;
+  // Select first color
+  document.querySelector('#modal-pl-detail-body .color-swatch').classList.add('selected');
+  openModal('modal-pl-detail');
+}
+
+function selectColor(c, el) {
+  document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('ah-color').value = c;
+}
+
+// ══════════════════════════════════════════
+//  CRUD
+// ══════════════════════════════════════════
+function addPlaylist() {
+  const name = document.getElementById('np-name').value.trim();
+  const icon = document.getElementById('np-icon').value.trim() || '📋';
+  if (!name) { document.getElementById('np-name').focus(); return; }
+  S.playlists.push({ id: 'pl_' + Date.now(), name, icon, habits: [] });
+  saveState(); closeModal('modal-new-pl'); renderManage();
+}
+
+function deletePlaylist(plId) {
+  if (!confirm('Delete this playlist and all its habits?')) return;
+  S.playlists = S.playlists.filter(p => p.id !== plId);
+  saveState(); renderManage();
+}
+
+function addHabit() {
+  const name = document.getElementById('ah-name').value.trim();
+  const plId = document.getElementById('ah-pl-id').value;
+  const color = document.getElementById('ah-color').value || COLORS[0];
+  if (!name) return;
+  const pl = S.playlists.find(p => p.id === plId);
+  if (!pl) return;
+  const h = { id: 'h_' + Date.now(), name, color };
+  pl.habits.push(h);
+  Object.keys(S.days).forEach(k => { if (S.days[k].done[h.id] === undefined) S.days[k].done[h.id] = false; });
+  saveState();
+  openPlDetail(plId);
+}
+
+function deleteHabit(plId, hId) {
+  const pl = S.playlists.find(p => p.id === plId);
+  if (pl) pl.habits = pl.habits.filter(h => h.id !== hId);
+  recalcStreaks(); saveState();
+}
+
+function addChallenge() {
+  const name = document.getElementById('nc-name').value.trim();
+  const icon = document.getElementById('nc-icon').value.trim() || '🔥';
+  const color = document.getElementById('nc-color').value;
+  const start = document.getElementById('nc-start').value;
+  const end = document.getElementById('nc-end').value;
+  const plId = document.getElementById('nc-playlist').value;
+  if (!name || !start || !end) { alert('Fill name, start and end date!'); return; }
+  if (start > end) { alert('Start must be before end!'); return; }
+  const c = { id: 'chal_' + Date.now(), name, icon, color, start, end, playlistId: plId };
+  S.challenges.push(c);
+  saveState(); closeModal('modal-new-chal');
+  switchPage('challenges');
+}
+
+function deleteChallenge(cId) {
+  if (!confirm('Delete this challenge?')) return;
+  S.challenges = S.challenges.filter(c => c.id !== cId);
+  saveState(); renderManage(); renderChallenges();
+}
+
+// ══════════════════════════════════════════
+//  BOOT
+// ══════════════════════════════════════════
+ensureDay(TKEY);
+recalcStreaks();
+renderHome();
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').catch(() => {});
 }
 </script>
 </body>
