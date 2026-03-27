@@ -1,4 +1,4 @@
-const CACHE = 'discipline365-v1';
+const CACHE = 'discipline365-v2';
 const ASSETS = [
   './',
   './index.html'
